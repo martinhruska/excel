@@ -395,43 +395,65 @@ But it would be a great space for future work.
 \section{Forester and VATA}
 \label{sec:forvata}
 
-This section describes how Forester has been refactored to be able to employ \vata
+This section describes how Forester has been refactored to be able to employ \vata\ 
 efficient implementation of	tree automata and the operations over them,
 especially checking inclusion of languages of tree automata.
+Forester had its own implementation of tree automata (in module called TA) and their operations
+but it is not as efficient as VATA is and it is also less maintable
+then using the library that implements state-of-the-art algorithms.
 
-First of all it is important to declare that we use \vata\ implementation of explicit encoding of TA because
+VATA provides two encodings of tree automata -- explicit and semi-symbolic.
+They differs mainly in a way of representation of transition relation of tree automata.
+The explicit encoding stores the transitions in an explicit hash tables while the semi-symolic
+uses a multi binary decision diagram.
+We use the implementation of explicit encoding of TA in this work because
 it is currently the only one that support the most of needed operations over TA and it is also more efficient than
-semi-symbolic encoding for purposes of Forester because no large alphabets are used during the verification procedure
+semi-symbolic encoding for the purposes of Forester because no large alphabets are used during the verification procedure
 so the advantage of the semi-symbolic encoding would not be fully utilized here.
 
-Forester implementation is currently far from being mature and high structural dependency is
-one of its bottlenecks.
-So the first thing needed to be done is reducing number of dependencies between classes (described in Section \ref{sec:forester_prep}).
-Then it would be possible to apply design pattern \emph{adapter} \cite{gamma95} (described in Section \ref{sec:adapter}) to create
-an interface between Forester and \vata\ (implementation itself is described in \ref{sec:fova_impl}).
-Applying of adapter design pattern makes possible to include VATA without need of rewriting
-Forester to the names of methods and data used in VATA.
+Forester implementation is currently far from being mature and
+high structural dependencies is one of its bottlenecks.
+So the first thing needed to be done was reducing number of dependencies between classes,
+especially reduction of dependencies to the existing Forester module implementing tree automata.
+One of approaches how to do this is applying \emph{Law of Demeter} \cite{lod89} to the code manipulating tree automata what practically
+means that classes using TA explicitly should implement methods providing information about TA instead of providing instance of TA object itself.
+Applying the Law of Demeter reduces knowledge needed about implementation of TA module across the whole project.
+Another way of reducing structural dependencies is making all possible methods and members of TA (in sense of C++ language \cite{stroustrup13}).
+This creates an explicitly tight interfaces to tree automata module so it is easier to see which methods needs to implement
+a new tree automata implementation.
+The last from the most used techniques of refactoring is employing \emph{auto} type deduction in C++ in combination
+with the \emph{Iterator} pattern.
+It is used for example when one needs to iterate over all transitions of tree automata or all transitions which
+have same state as parent.
+
+After refactoring it is possible to apply design pattern \emph{adapter} \cite{gamma95} to create
+an interface between Forester and \vata.
+Applying the adapter design pattern makes possible to include VATA without need of rewriting
+Forester to the~names of methods and data members used in VATA.
 It creates also only one place (particularly adapter class) connecting Forester and VATA instead of
 including VATA into many of the Forester classes and so it prevents from creating too strong relation between them.
 
 The main part of the adapter patter is in our case newly implemented class \emph{VATAAdapter} playing role of Adaptor.
-We decided to used the implementation approach to Adaptor, preferring composition over inheritance,
-because it is more suitable for our purposes since we often needs to rename methods 
-(name of a method in Forester differs from name of a method in VATA performing same operation)
-or conversion of parameters data type (e.g. from vector to set). 
+We decided to used the implementation approach to Adaptor, preferring composition over inheritance.
+It is more suitable for our purposes since we often needs to rename methods 
+(a name of a method in Forester differs from a name of a method in VATA performing the same operation)
+or convert a data type of parameter of tree automata operation (e.g. from vector to set). 
 
+Now we provide more technical details about implementation of the adapter pattern.
 The class \emph{VATAAdapter} instantiates class \emph{ExplicitTreeAut} from VATA as its private data member
 and redirects to this instance method calls from Forester (the names of methods of VATAAdapter are the same as they were
-in the original TA library).
+in the original Forester TA library).
 \emph{VATAAdapter} also sometimes performs mentioned conversion of the data types.
 There are methods implemented by adapter not presented in VATA like method \emph{unfoldAtRoot}
-performing some kind of an unfolding.
-The methods of this kind are very Forester specific so it is not sensible to add them to general purpose library like VATA is.
+performing an unfolding, an operation specific for forest automata.
+The methods of this kind are very Forester specific so it is not sensible to add them to general purpose library like VATA is
+and it is better to implement them in interface like class VATAAdapter is.
 
 We originally supposed that it would be possible to keep the original TA module along VATA adapter
 to be able to easily switch between them.
-However it has proved that this would bring high overhead in some situations.
-A~conversion of some data types is needed compared to situation when there are used directly data types compatible with VATA in the Forester code.
+However it has shown that this would bring high overhead in some situations.
+E.g., a~conversion of some data types would be needed in this case
+what is overhead compared to implementation where data types compatible with VATA are used directly in the Forester code.
 Hence we decided to remove the original tree automata module and further support only version of Forester with \vata.
 
 %--------------------------------------------------------
