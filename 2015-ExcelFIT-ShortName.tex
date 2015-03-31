@@ -211,12 +211,16 @@ Finally, conclusions of the work takes a place in Section \ref{sec:concl}.
 	\input{images/sll_d.tikz}
 	\caption{
 	Figure shows tree decomposition of a heap graph.
-    The heap graph representing singly list is shown in the top of Figure.
-	Then the cutpoints, the nodes labeled $1$, $2$ and $3$, are identified.
-	The the graph is split to the three trees shown in the bottom of Figure.
-	The new trees contain the references to another trees, in this case tree $1$ and tree $3$
+    The heap graph representing singly-linked list is shown in the top of Figure.
+	The nodes could be labeled by a pointer variable that references allocated memory cell
+	corresponding to the node.
+	Moreover the cut-points are labeled by a number that they have in ordering over
+	the cut-points.
+	In this case there are three cut-points with order $1$, $2$ and $3$.
+	The graph is split to the three trees shown in the bottom of Figure during the heap decomposition.
+	The new trees could contain the references to another trees, in this case tree $1$ and tree $3$
 	have the nodes referencing tree $2$.}
-	\label{fig:KeepCalm}
+	\label{fig:graph}
 \end{figure}
 
 This section provides a high level overview of the verification procedure based
@@ -233,48 +237,62 @@ another allocated memory cell of the list.
 Each node could be labeled by a name of the pointer variables that
 reference the given node or it could be labeled by a data contained in the node.
 The example of such a graph is shown in~Figure~\ref{fig:graph}.
+We ommit the data nodes in Figure \ref{fig:graph} for sake of clarity.
+The figure shows that the variables $x$, $y$ points two singly-linked list (the blue and the red nodes) that
+have common part (the green nodes).
+The original heap graph is shown in the top of Figure \ref{fig:graph}.
+The tree decomposition, which is decribed later, is in the bottom of Figure \ref{fig:graph}.
 
 We can decompose the graph to a set of trees by the following method.
 First we identify so called \emph{cut-points} what are the nodes referenced by
 one or more pointer variables or the nodes having more than one incoming edges.
 The cut-points are then numbered by a depth-first traversal of the graph that starts from
 the nodes referenced by the pointer variables.
-Then the graph is split to the trees which have a cut-point as their roots and do not
-contain any other cut-point.
-The last thing we need to take care of is redirecting the edges, which lead to the nodes
+The graph at Figure \ref{fig:graph} has the three cut-points that are labeled by the numbers $1$,
+$2$ and $3$ what denotes the node order in the cut-points ordering.
+Then the graph is split to the trees with cut-point as the roots.
+The new trees do not contain no cut-points.
+At Figure \ref{fig:graph} the graph graph to the trees is shown at the bottom.
+Finally, we need to take care of is redirecting the edges, which lead to the nodes
 marked as the cut-points, to the new nodes because the cut-point are now roots of trees and
 so cannot have the incoming edges.
-The new nodes are labeled by a number referencing to the tree that has a related cut-point like a root.
+The new nodes replacing cut-points are labeled by a number referencing to the tree that has a related cut-point like a root.
+The example at Figure \ref{fig:graph} shows that tree $1$ and tree $3$ contains the nodes with label $\overline{2}$
+referencing tree~$2$.
 
-So it is possible to decompose a heap to the set of trees, so called forest.
+The set of trees (created by graph decomposition) is called forest.
 Such a forest could be accepted by a forest automaton.
 A~forest automaton is a tuple of finite tree automat which are automata accepting trees instead of words (in comparsion with finite automata).
-The tree automata of forest automaton are interconnected by references (that are also symbols in their alphabet)
+The tree automata within a forest automaton are interconnected by references (that are also symbols in their alphabet)
 so we are able to accept the forests representing state of heaps by forest automata.
 
-When we view verification procedure based on forest automata as abstract interpretation,
-forest automata could be used as an abstract domain.
-Concrete domain is a set of heaps related to a line in the given program.
-We further define abstract transformers related to concrete program operation.
-The verification procedure is the performed as a symbolic execution where the program
-is translated from the concrete operations to the abstract transformers which manipulates
-forest automata.
+So far we are described how to represent dynamic data structures by forest automata.
+They can be viewed also as an abstract domain in context of abstract interpretation
+whereas a concrete domain is a set of heaps.
+It is also possible to define abstract transformers corresponding to the (concrete) program operations over forest automata.
+The verification procedure is then possible to perform as a symbolic execution
+where abstract transformers are gradually applied to abstract domain.
 When an error like a invalid memory reference or invalid free happens during the symbolic
 execution it implies that it is possible that there is an error in the program (but because
 the forest automata overapproximate the state space of the original program the error could be spurious).
 
-So far we are able to represent a dynamic data structure with bounded number of cut-points.
-But there are data structures like a double-linked list where each node is a cut-point because
+It is possible to represent a dynamic data structure with bounded number of cut-points.
+But there are data structures like a doubly-linked list where each node is a cut-point because
 it is pointed by the next and also previous member of the list.
-This could be resolved by concept of hiearchical forest automata (or automata of higher level).
-These automata could have another forest automata as symbols.
-The nested automata can model small part of a graph causing unboudness of cut-points.
-Then when such a heap is modelled by a forest automaton the suitable
-part of heap graph is folded to forest automata and the graph is modelled
-by forest automata of higher level having the lower one on the edge.
-When the heap is then reconstructed from the forest automata we unfold
-the graphs represented by forest automata to graph represented by the forest automata
-of higher level.
+This could lead to the unbounded number of cut-points.
+It possible to resolve this problem by introducing so-called \emph{boxes}.
+The repeating sub-graphs causing unboudness of cut-points are collected to boxes.
+Then these sub-graphs are replaced by hyperedge labeld by an appropriate box.
+This transformation changes graph to a new hiearchical hypergraph with bounded number of boxes.
+It is still possible to decompose either hypergraph or boxes to the tree components in the way
+described above.
+So it is also represent the hypergraph with forest automata.
+This forest automata should be also hiearchical as the graphs are, beucase they
+should include forest automata of lower level representing boxes in their alphabet.
+The nesting of forest automata to symbols of alphabet of forest automata of higher level
+could be done in more levels so we get real hierarchy.
+
+More technical details about a heap decomposition and forest automata could be found in \cite{forester11, forester13}.
 
 \section{Backward Run and Predicate Abstraction}
 \label{sec:br}
