@@ -20,7 +20,7 @@
   \node[memnodeblue] (x2) [right of=x1] {};
   \node[memnodeblue] (x3) [right of=x2] {};
 
-  \node[memnodepink] (y1) [below of=x1] {3};
+  \node[memnodepink] (y1) [below of=x1, yshift=3mm] {3};
   \node[memnodepink] (y2) [right of=y1] {};
 
   \node[memnodegreen] (join) [right of=y2] {2};
