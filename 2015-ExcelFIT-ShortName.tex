@@ -395,17 +395,17 @@ But it would be a great space for future work.
 \section{Forester and VATA}
 \label{sec:forvata}
 
-This section describes how Forester has been refactored to be able to employ \vata\ 
+This section describes how Forester has been refactored to be possible to employ \vata\ 
 efficient implementation of	tree automata and the operations over them,
 especially checking inclusion of languages of tree automata.
-Forester had its own implementation of tree automata (in module called TA) and their operations
+Forester had its own implementation of tree automata and their operations (in module called TA)
 but it is not as efficient as VATA is and it is also less maintable
 then using the library that implements state-of-the-art algorithms.
 
 VATA provides two encodings of tree automata -- explicit and semi-symbolic.
 They differs mainly in a way of representation of transition relation of tree automata.
 The explicit encoding stores the transitions in an explicit hash tables while the semi-symolic
-uses a multi binary decision diagram.
+uses a multi-binary decision diagram.
 We use the implementation of explicit encoding of TA in this work because
 it is currently the only one that support the most of needed operations over TA and it is also more efficient than
 semi-symbolic encoding for the purposes of Forester because no large alphabets are used during the verification procedure
@@ -414,17 +414,17 @@ so the advantage of the semi-symbolic encoding would not be fully utilized here.
 Forester implementation is currently far from being mature and
 high structural dependencies is one of its bottlenecks.
 So the first thing needed to be done was reducing number of dependencies between classes,
-especially reduction of dependencies to the existing Forester module implementing tree automata.
+especially reduction of dependencies on the existing Forester module implementing tree automata.
 One of approaches how to do this is applying \emph{Law of Demeter} \cite{lod89} to the code manipulating tree automata what practically
 means that classes using TA explicitly should implement methods providing information about TA instead of providing instance of TA object itself.
 Applying the Law of Demeter reduces knowledge needed about implementation of TA module across the whole project.
-Another way of reducing structural dependencies is making all possible methods and members of TA (in sense of C++ language \cite{stroustrup13}).
-This creates an explicitly tight interfaces to tree automata module so it is easier to see which methods needs to implement
+Another way of reducing structural dependencies is making all possible methods and members of TA private (in sense of C++ language \cite{stroustrup13}).
+This creates an explicit tight interfaces to tree automata module so it is easier to see which methods needs to implement
 a new tree automata implementation.
-The last from the most used techniques of refactoring is employing \emph{auto} type deduction in C++ in combination
+The last from the most used techniques of refactoring in this work is employing \emph{auto} type deduction in C++ in combination
 with the \emph{Iterator} pattern.
 It is used for example when one needs to iterate over all transitions of tree automata or all transitions which
-have same state as parent.
+have the same state as parent.
 
 After refactoring it is possible to apply design pattern \emph{adapter} \cite{gamma95} to create
 an interface between Forester and \vata.
@@ -433,16 +433,16 @@ Forester to the~names of methods and data members used in VATA.
 It creates also only one place (particularly adapter class) connecting Forester and VATA instead of
 including VATA into many of the Forester classes and so it prevents from creating too strong relation between them.
 
-The main part of the adapter patter is in our case newly implemented class \emph{VATAAdapter} playing role of Adaptor.
+The main part of the adapter patter is newly implemented class \emph{VATAAdapter} taking a role of Adaptor.
 We decided to used the implementation approach to Adaptor, preferring composition over inheritance.
 It is more suitable for our purposes since we often needs to rename methods 
-(a name of a method in Forester differs from a name of a method in VATA performing the same operation)
+(a name of a method in Forester differs from the name of the semanticaly same method in VATA)
 or convert a data type of parameter of tree automata operation (e.g. from vector to set). 
 
-Now we provide more technical details about implementation of the adapter pattern.
-The class \emph{VATAAdapter} instantiates class \emph{ExplicitTreeAut} from VATA as its private data member
-and redirects to this instance method calls from Forester (the names of methods of VATAAdapter are the same as they were
-in the original Forester TA library).
+Now we provide more technical details about implementation.
+The class \emph{VATAAdapter} instantiates the class \emph{ExplicitTreeAut} from VATA as its private data member
+and redirects to it method calls from Forester (the names of methods of VATAAdapter are the same as they were
+in the original Forester TA module).
 \emph{VATAAdapter} also sometimes performs mentioned conversion of the data types.
 There are methods implemented by adapter not presented in VATA like method \emph{unfoldAtRoot}
 performing an unfolding, an operation specific for forest automata.
@@ -477,8 +477,8 @@ The implementation of predicate abstraction is currently in progress.
 
 The future work after finishing the basic predicate abstraction could be in generalizing the method to the hiearchical forest automata
 what enables Forester to analyze more test cases.
-Forester code needs also to further refactored and also greater support for C language construction should be added to be
-able to analyse more real work programs.
+Forester code needs also to be further refactored and greater support for C language construction should be implemented to be
+able to analyse more real word programs.
 The mentioned work should help Forester to win SV-COMP 2016 competition.
 %\textbf{[Highlights of Results]} Particular numbers. Remind the reader that the paper matters.
 %\phony{Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempus fermentum ipsum at venenatis. Curabitur ultricies, mauris eu ullamcorper mattis, ligula purus dapibus mi, vel dapibus odio nulla et ex. Sed viverra cursus mattis. Suspendisse ornare semper condimentum. Interdum et malesuada fames ac ante ipsum.}
