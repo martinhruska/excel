@@ -6,6 +6,8 @@
 *.fls
 *.out
 *.toc
+*.te~
+*.swp
 
 ## Intermediate documents:
 *.dvi
