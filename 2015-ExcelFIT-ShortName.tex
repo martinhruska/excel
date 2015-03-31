@@ -209,7 +209,13 @@ Finally, conclusions of the work takes a place in Section \ref{sec:concl}.
 	\vspace{0.5cm}
 	
 	\input{images/sll_d.tikz}
-	\caption{Good writing is bad writing that was rewritten several times. Don't worry, start somewhere.}
+	\caption{
+	Figure shows tree decomposition of a heap graph.
+    The heap graph representing singly list is shown in the top of Figure.
+	Then the cutpoints, the nodes labeled $1$, $2$ and $3$, are identified.
+	The the graph is split to the three trees shown in the bottom of Figure.
+	The new trees contain the references to another trees, in this case tree $1$ and tree $3$
+	have the nodes referencing tree $2$.}
 	\label{fig:KeepCalm}
 \end{figure}
 
@@ -226,7 +232,7 @@ and the edges of the graph are related to the pointers referencing
 another allocated memory cell of the list.
 Each node could be labeled by a name of the pointer variables that
 reference the given node or it could be labeled by a data contained in the node.
-The example of such a graph is shown in~Figure \ref{fig:graph}.
+The example of such a graph is shown in~Figure~\ref{fig:graph}.
 
 We can decompose the graph to a set of trees by the following method.
 First we identify so called \emph{cut-points} what are the nodes referenced by
