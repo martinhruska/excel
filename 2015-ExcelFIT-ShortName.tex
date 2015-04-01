@@ -304,9 +304,9 @@ More technical details about a heap decomposition and forest automata could be f
 	\label{fig:KeepCalm}
 \end{figure}
 
-We described how to represent dynamic data structures by forest automata.
+We have already cover how to represent dynamic data structures by forest automata in the previous section.
 The forest automata make us able to handle also infinite state spaces
-rising from the unboundness of the mentioned dynamic data structures.
+rising from a possible unboundness of the mentioned dynamic data structures.
 However, the state explosion could still occur what lead
 to nearly impossibility of finish verification procedure in real time.
 Therefore the abstraction over the forest automata is introduced.
@@ -315,64 +315,74 @@ of forest automata to one abstract state.
 The negative effect of the abstraction is the overapproximation of the reachable
 states of an analyzed system.
 In the case of computer programs this leads to finding reachable error states in
-abstracted state space which are not present in real system.
+abstracted state space which are not present in the real system.
 This could be prevented by a refinement of the abstraction
-which prevent the abstraction to include the part of state space where
-the spurious error has been example.
+which avoids repreating of the abstraction of the states
+that lead to the spurious error.
 
-Forester now contains a height abstraction.
-This abstraction merges states whose languages (language of state is set of trees) are the same
-when the trees of the language are compared only to the given depth.
+Forester now implements a height abstraction.
+This abstraction merges states whose languages (note that a language of state is a set of trees) are the same
+when the trees of the languages are compared only to the given depth.
 The main problem of this abstraction technique is its scalability because
-the only one way how to scale it is by the parameter defining the depth of tree comparison.
+the only way how to scale it is by the parameter defining the depth of tree comparison.
 The more precise abstraction is so called \emph{predicate abstraction} that introduces
 set of predicates and merges the states in which the same predicates hold.
 When a spurious counterexample is found, then the set of predicates is extended by
 a predicate that prevents reaching the spurious counterexample again
-and the verification procedure is rerun again with the new predicate.
+and the verification procedure is rerun with the new predicate.
 
 Finding the new predicate and checking spuriousness of an error is done by performing of \emph{backward run}.
 A~backward run starts from forest automata modelling a heap with spurious error and
 reverting gradually each abstract operation over the forest automata
 in backward order.
-When an automata with empty language is get by intersection between forest automata
-get from the backward run and forward run is yield then the error is spurious.
+When an automata with an empty language is get by an intersection between forest automata
+from the backward run and the forward then the error is spurious.
 The automaton modelling the last non empty intersection of forward and backward run
 is then used like a new predicate.
 
 Forester implementation of abstract transformers does not modify
 forest automata at all.
-It often performs just some changes in symbolic state not
-affecting forest automata so it is possible to revert these operations without
-need of performing of intersection of forest automata to get previous backward
-run symbolic state.
-However, there are critical operations like freeing a memory node that the intersection
-needs.
+We mentioned that it could be neccessary to perform a forest automata intersection during
+the backward run.
+But it is not neccessary always because Forester implements many abstract transformers
+that do not modify forest automata directly but changes only symbolic state of the symbolic execution
+without accessing forest automata.
+The abstract transformers of this kind could be reversed without intersection of forest automata
+from the backward and the forward run what brings better performence of the backward run.
+An example where the intresection is neccessary to be done is for example an operation for freeing a memory node.
 
-The goal of this work is to implement backward run and the predicate abstraction
+The goal of this work is to implement backward run and predicate abstraction
 for non-hierarchical forest automata.
 It includes design of the reverse operations for abstract transformers over
-the abstract domain and the application of predicate abstraction to forest automata.
-Morever, in the reverse operations the intersection of foster automata is needed
-so it is also part of this work to implement it.
+the abstract domain and the application of predicate abstraction on forest automate.
+Morever, as it was already mentioned the intersection of foster automata is needed in some reverse
+operations of backward run so it is also part of this work to implement this operation.
 Forester has some basic implementation of both, the reverse microcode instructions and
 intersection of forest automata.
 However, the implementation was not mature enough so it was necessary to
 complete it and evaluate it on the SV-COMP benchmark.
 
-The implementation of the backward run has been already finished
-and evaluate on the benchmark.
-The results are in Table \ref{Tab:bwres}.
-The implementation helps in identifying of the X spuriousness counterexamples and
-confirmation of Y real errors.
-The test cases with a spurious counterexamples will be further resolved by implementing predicate
+The implementation of the backward run has been already finished and evaluate on the SV-COMP benchmark.
+The improvement of the results of Forester are in Table \ref{Tab:bwres}.
+The results in Table \ref{Tab:bwres} are the number of points that Forester would get
+in SV-COMP competition with implemented backward run compared to points earned without backward run.
+The implementation of backward helps in confirming of the new $6$ real errors in programs in memory safety category and
+of the new $8$ real errors in heap manipulation category.
+Moreover, the $3$ spurious counterexamples have been dected in heap manipulation category.
+The test cases in which a spurious counterexamples will be further resolved by implementing predicate
 abstraction which is currently in progress.
+The analyzed programs in SV-COMP benchmark mentioned here contains e.g. programs from LDV (Linux Drivers Verification) project
+containing implementation of alternating singly-linked list or manipulation with mutex locks or the programs
+implementing bubble sort over a list implementation from the Linux kernel.
+TODO(MORE DETAILED DESCRIPTION OF TEST CASES.)
 
-This work however does not contain backward run and predicate abstraction over
-the programs where hiearchical forest automata because the forest automata unfolding
-would be needed for implementing intersection in these cases
-what is exceed room of this work.
-But it would be a great space for future work.
+
+We mentioned that this work implementes either backward run and predicate abstraction only for
+non-hiearchical forest automata.
+The extension of them for hiearchical forest automata is not part
+of this work because of it demanding character.
+But it is definitely a challenging issue for future work
+that will be done next after finishing the implementation of basic predicate abstraction.
 
 \begin{table}[h]
 	\vskip6pt
