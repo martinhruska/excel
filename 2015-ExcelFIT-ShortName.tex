@@ -299,9 +299,19 @@ More technical details about a heap decomposition and forest automata could be f
 
 \begin{figure}[t]
 	\centering
-	\includegraphics[width=0.7\linewidth]{keep-calm.png}
-	\caption{Good writing is bad writing that was rewritten several times.  Don't worry, start somewhere.}
-	\label{fig:KeepCalm}
+	\includegraphics[width=1\linewidth]{artmc.png}
+	\caption{
+		Figure is taken from \cite{artmc}.
+		Figure shows a forest automata langauge before (green area)
+		and after (yellow area) abstraction.
+		One oval consisting green and yellow part represents language in a symbolic state.
+		Figure also shows how a forest automaton (and it language) is gradually changed
+		by abstract transformers what is illustrated by lines connecting ovals.
+		A~found error is shown as a red area in last oval.
+		The backward run starts from this error and it finds
+		that an error is spurious because an intersection of forest automata language from backward
+		and forward run is empty at level of the symbolic state with language $L(M^{\alpha}_{k-1})$.}
+	\label{fig:bwrun}
 \end{figure}
 
 We have already cover how to represent dynamic data structures by forest automata in the previous section.
@@ -339,6 +349,8 @@ When an automata with an empty language is get by an intersection between forest
 from the backward run and the forward then the error is spurious.
 The automaton modelling the last non empty intersection of forward and backward run
 is then used like a new predicate.
+Backward run is illustrated by Figure \ref{fig:bwrun} and the illustration
+is further described in the caption of Figure.
 
 Forester implementation of abstract transformers does not modify
 forest automata at all.
@@ -362,21 +374,6 @@ intersection of forest automata.
 However, the implementation was not mature enough so it was necessary to
 complete it and evaluate it on the SV-COMP benchmark.
 
-The implementation of the backward run has been already finished and evaluate on the SV-COMP benchmark.
-The improvement of the results of Forester are in Table \ref{Tab:bwres}.
-The results in Table \ref{Tab:bwres} are the number of points that Forester would get
-in SV-COMP competition with implemented backward run compared to points earned without backward run.
-The implementation of backward helps in confirming of the new $6$ real errors in programs in memory safety category and
-of the new $8$ real errors in heap manipulation category.
-Moreover, the $3$ spurious counterexamples have been dected in heap manipulation category.
-The test cases in which a spurious counterexamples will be further resolved by implementing predicate
-abstraction which is currently in progress.
-The analyzed programs in SV-COMP benchmark mentioned here contains e.g. programs from LDV (Linux Drivers Verification) project
-containing implementation of alternating singly-linked list or manipulation with mutex locks or the programs
-implementing bubble sort over a list implementation from the Linux kernel.
-TODO(MORE DETAILED DESCRIPTION OF TEST CASES.)
-
-
 We mentioned that this work implementes either backward run and predicate abstraction only for
 non-hiearchical forest automata.
 The extension of them for hiearchical forest automata is not part
@@ -384,21 +381,42 @@ of this work because of it demanding character.
 But it is definitely a challenging issue for future work
 that will be done next after finishing the implementation of basic predicate abstraction.
 
+\subsection{Evaluation}
+
+The implementation of the backward run has been already finished and evaluate on the SV-COMP benchmark.
+The improvement of the results of Forester are in Table \ref{tab:bwres}.
+The results in Table \ref{tab:bwres} are the number of points that Forester would get
+in SV-COMP competition with implemented backward run compared to points earned without backward run.
+The implementation of backward helps in confirming of the new $6$ real errors in programs in memory safety category and
+of the new $8$ real errors in heap manipulation category.
+Moreover, the $3$ spurious counterexamples have been dected in heap manipulation category.
+The test cases in which a spurious counterexamples will be further resolved by implementing predicate
+abstraction which is currently in progress.
+The analyzed programs in SV-COMP benchmark mentioned here includes e.g., programs from LDV (Linux Drivers Verification) project
+containing implementing alternating singly-linked list or manipulation with mutex locks or the programs
+implementing bubble sort over a list implementation from the Linux kernel.
+Note that Forester does not currently successfuly process all programs in the test set
+because it does not currently support all C language constructions.
+It causes that the improvement in SV-COMP scoring is not as good as it would be when
+Forester could analyze all programs in benchmark.
+TODO(MORE DETAILED DESCRIPTION OF TEST CASES.)
+
 \begin{table}[h]
 	\vskip6pt
-	\caption{Table of Grades}
+	\caption{SV-COMP Benchmark Evaluation. Table shows how implementation of backward run improves
+	score in SV-COMP competitionl. The left column gives a number of the points before backward run implementation 
+	and the right column contains the points get with implemented backward run.
+	The points are computed in compliance with SV-COMP rules that can be found in \cite{www:svcomp}.}
 	\centering
 	\begin{tabular}{llr}
 		\toprule
-		\multicolumn{2}{c}{Name} \\
-		\cmidrule(r){1-2}
-		First name & Last Name & Grade \\
+		Category & Before & After \\
 		\midrule
-		John & Doe & $7.5$ \\
-		Richard & Miles & $2$ \\
+		HeapManipulation & $32$ & $40$ \\
+		MemorySafety & $22$ & $28$ \\
 		\bottomrule
 	\end{tabular}
-	\label{tab:ExampleTable}
+	\label{tab:bwres}
 \end{table}
 
 
