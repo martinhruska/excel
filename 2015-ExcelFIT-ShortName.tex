@@ -167,7 +167,7 @@ A~prototype of this verification procedure has been implemented in a tool called
 Forester verifies programs written in C language and it can detect invalid dereferences, invalid free, memory leaks and also reachability of an error label.
 It is yet able to verify non-trivial data structures like the skip-lists of the second and the third level
 but there is still a room for its improvement.
-E.g. Forester currently does not support complete C language syntax and
+E.g., Forester currently does not support complete C language syntax and
 it is not also yet possible to check whether a found error is real or spurious.
 It is also needed to refactore some parts of Forester code before an extension of the tool.
 A~general goal of this thesis is improving Forester in the areas described further.
@@ -237,11 +237,11 @@ another allocated memory cell of the list.
 Each node could be labeled by a name of the pointer variables that
 reference the given node or it could be labeled by a data contained in the node.
 The example of such a graph is shown in~Figure~\ref{fig:graph}.
-We ommit the data nodes in Figure \ref{fig:graph} for sake of clarity.
+We omit the data nodes in Figure \ref{fig:graph} for sake of clarity.
 The figure shows that the variables $x$, $y$ points two singly-linked list (the blue and the red nodes) that
 have common part (the green nodes).
 The original heap graph is shown in the top of Figure \ref{fig:graph}.
-The tree decomposition, which is decribed later, is in the bottom of Figure \ref{fig:graph}.
+The tree decomposition, which is described later, is in the bottom of Figure \ref{fig:graph}.
 
 We can decompose the graph to a set of trees by the following method.
 First we identify so called \emph{cut-points} what are the nodes referenced by
@@ -262,7 +262,7 @@ referencing tree~$2$.
 
 The set of trees (created by graph decomposition) is called forest.
 Such a forest could be accepted by a forest automaton.
-A~forest automaton is a tuple of finite tree automat which are automata accepting trees instead of words (in comparsion with finite automata).
+A~forest automaton is a tuple of finite tree automata which are automata accepting trees instead of words (in comparison with finite automata).
 The tree automata within a forest automaton are interconnected by references (that are also symbols in their alphabet)
 so we are able to accept the forests representing state of heaps by forest automata.
 
@@ -282,12 +282,12 @@ it is pointed by the next and also previous member of the list.
 This could lead to the unbounded number of cut-points.
 It possible to resolve this problem by introducing so-called \emph{boxes}.
 The repeating sub-graphs causing unboudness of cut-points are collected to boxes.
-Then these sub-graphs are replaced by hyperedge labeld by an appropriate box.
-This transformation changes graph to a new hiearchical hypergraph with bounded number of boxes.
+Then these sub-graphs are replaced by hyperedge labeled by an appropriate box.
+This transformation changes graph to a new hierarchical hypergraph with bounded number of boxes.
 It is still possible to decompose either hypergraph or boxes to the tree components in the way
 described above.
 So it is also represent the hypergraph with forest automata.
-This forest automata should be also hiearchical as the graphs are, beucase they
+This forest automata should be also hierarchical as the graphs are, because they
 should include forest automata of lower level representing boxes in their alphabet.
 The nesting of forest automata to symbols of alphabet of forest automata of higher level
 could be done in more levels so we get real hierarchy.
@@ -302,7 +302,7 @@ More technical details about a heap decomposition and forest automata could be f
 	\includegraphics[width=1\linewidth]{artmc.png}
 	\caption{
 		Figure is taken from \cite{artmc}.
-		Figure shows a forest automata langauge before (green area)
+		Figure shows a forest automata language before (green area)
 		and after (yellow area) abstraction.
 		One oval consisting green and yellow part represents language in a symbolic state.
 		Figure also shows how a forest automaton (and it language) is gradually changed
@@ -316,7 +316,7 @@ More technical details about a heap decomposition and forest automata could be f
 
 We have already cover how to represent dynamic data structures by forest automata in the previous section.
 The forest automata make us able to handle also infinite state spaces
-rising from a possible unboundness of the mentioned dynamic data structures.
+rising from a possible unboudness of the mentioned dynamic data structures.
 However, the state explosion could still occur what lead
 to nearly impossibility of finish verification procedure in real time.
 Therefore the abstraction over the forest automata is introduced.
@@ -327,7 +327,7 @@ states of an analyzed system.
 In the case of computer programs this leads to finding reachable error states in
 abstracted state space which are not present in the real system.
 This could be prevented by a refinement of the abstraction
-which avoids repreating of the abstraction of the states
+which avoids repeating of the abstraction of the states
 that lead to the spurious error.
 
 Forester now implements a height abstraction.
@@ -354,29 +354,29 @@ is further described in the caption of Figure.
 
 Forester implementation of abstract transformers does not modify
 forest automata at all.
-We mentioned that it could be neccessary to perform a forest automata intersection during
+We mentioned that it could be necessary to perform a forest automata intersection during
 the backward run.
-But it is not neccessary always because Forester implements many abstract transformers
+But it is not necessary always because Forester implements many abstract transformers
 that do not modify forest automata directly but changes only symbolic state of the symbolic execution
 without accessing forest automata.
 The abstract transformers of this kind could be reversed without intersection of forest automata
-from the backward and the forward run what brings better performence of the backward run.
-An example where the intresection is neccessary to be done is for example an operation for freeing a memory node.
+from the backward and the forward run what brings better performance of the backward run.
+An example where the intersection is necessary to be done is for example an operation for freeing a memory node.
 
 The goal of this work is to implement backward run and predicate abstraction
 for non-hierarchical forest automata.
 It includes design of the reverse operations for abstract transformers over
 the abstract domain and the application of predicate abstraction on forest automate.
-Morever, as it was already mentioned the intersection of foster automata is needed in some reverse
+Moreover, as it was already mentioned the intersection of foster automata is needed in some reverse
 operations of backward run so it is also part of this work to implement this operation.
 Forester has some basic implementation of both, the reverse microcode instructions and
 intersection of forest automata.
 However, the implementation was not mature enough so it was necessary to
 complete it and evaluate it on the SV-COMP benchmark.
 
-We mentioned that this work implementes either backward run and predicate abstraction only for
-non-hiearchical forest automata.
-The extension of them for hiearchical forest automata is not part
+We mentioned that this work implements either backward run and predicate abstraction only for
+non-hierarchical forest automata.
+The extension of them for hierarchical forest automata is not part
 of this work because of it demanding character.
 But it is definitely a challenging issue for future work
 that will be done next after finishing the implementation of basic predicate abstraction.
@@ -389,13 +389,13 @@ The results in Table \ref{tab:bwres} are the number of points that Forester woul
 in SV-COMP competition with implemented backward run compared to points earned without backward run.
 The implementation of backward helps in confirming of the new $6$ real errors in programs in memory safety category and
 of the new $8$ real errors in heap manipulation category.
-Moreover, the $3$ spurious counterexamples have been dected in heap manipulation category.
+Moreover, the $3$ spurious counterexamples have been detected in heap manipulation category.
 The test cases in which a spurious counterexamples will be further resolved by implementing predicate
 abstraction which is currently in progress.
 The analyzed programs in SV-COMP benchmark mentioned here includes e.g., programs from LDV (Linux Drivers Verification) project
 containing implementing alternating singly-linked list or manipulation with mutex locks or the programs
 implementing bubble sort over a list implementation from the Linux kernel.
-Note that Forester does not currently successfuly process all programs in the test set
+Note that Forester does not currently successfully process all programs in the test set
 because it does not currently support all C language constructions.
 It causes that the improvement in SV-COMP scoring is not as good as it would be when
 Forester could analyze all programs in benchmark.
@@ -404,7 +404,7 @@ TODO(MORE DETAILED DESCRIPTION OF TEST CASES.)
 \begin{table}[h]
 	\vskip6pt
 	\caption{SV-COMP Benchmark Evaluation. Table shows how implementation of backward run improves
-	score in SV-COMP competitionl. The left column gives a number of the points before backward run implementation 
+	score in SV-COMP competition. The left column gives a number of the points before backward run implementation 
 	and the right column contains the points get with implemented backward run.
 	The points are computed in compliance with SV-COMP rules that can be found in \cite{www:svcomp}.}
 	\centering
@@ -427,12 +427,12 @@ This section describes how Forester has been refactored to be possible to employ
 efficient implementation of	tree automata and the operations over them,
 especially checking inclusion of languages of tree automata.
 Forester had its own implementation of tree automata and their operations (in module called TA)
-but it is not as efficient as VATA is and it is also less maintable
+but it is not as efficient as VATA is and it is also less maintainable
 then using the library that implements state-of-the-art algorithms.
 
 VATA provides two encodings of tree automata -- explicit and semi-symbolic.
 They differs mainly in a way of representation of transition relation of tree automata.
-The explicit encoding stores the transitions in an explicit hash tables while the semi-symolic
+The explicit encoding stores the transitions in an explicit hash tables while the semi-symbolic
 uses a multi-binary decision diagram.
 We use the implementation of explicit encoding of TA in this work because
 it is currently the only one that support the most of needed operations over TA and it is also more efficient than
@@ -464,7 +464,7 @@ including VATA into many of the Forester classes and so it prevents from creatin
 The main part of the adapter patter is newly implemented class \emph{VATAAdapter} taking a role of Adaptor.
 We decided to used the implementation approach to Adaptor, preferring composition over inheritance.
 It is more suitable for our purposes since we often needs to rename methods 
-(a name of a method in Forester differs from the name of the semanticaly same method in VATA)
+(a name of a method in Forester differs from the name of the semantically same method in VATA)
 or convert a data type of parameter of tree automata operation (e.g. from vector to set). 
 
 Now we provide more technical details about implementation.
@@ -500,13 +500,13 @@ Forester had to be refactored for this purposes.
 
 The first goal has been already reached and the version of Forester using the VATA library successfully participated in competition SV-COMP 2015 \cite{www:svcomp}.
 The second goal is partly finished.
-The backward run with needed forest automata intersection for non-hiearchical forest automata has been completed and evaluated on SV-COMP benchamark.
+The backward run with needed forest automata intersection for non-hierarchical forest automata has been completed and evaluated on SV-COMP benchmark.
 The implementation of predicate abstraction is currently in progress.
 
-The future work after finishing the basic predicate abstraction could be in generalizing the method to the hiearchical forest automata
+The future work after finishing the basic predicate abstraction could be in generalizing the method to the hierarchical forest automata
 what enables Forester to analyze more test cases.
 Forester code needs also to be further refactored and greater support for C language construction should be implemented to be
-able to analyse more real word programs.
+able to analyze more real word programs.
 The mentioned work should help Forester to win SV-COMP 2016 competition.
 %\textbf{[Highlights of Results]} Particular numbers. Remind the reader that the paper matters.
 %\phony{Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempus fermentum ipsum at venenatis. Curabitur ultricies, mauris eu ullamcorper mattis, ligula purus dapibus mi, vel dapibus odio nulla et ex. Sed viverra cursus mattis. Suspendisse ornare semper condimentum. Interdum et malesuada fames ac ante ipsum.}
