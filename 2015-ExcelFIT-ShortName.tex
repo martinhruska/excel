@@ -242,7 +242,7 @@ have common part (the green nodes).
 The original heap graph is shown in the top of Figure \ref{fig:graph}.
 The tree decomposition, which is described later, is in the bottom of Figure \ref{fig:graph}.
 
-We can decompose the graph to a set of trees by the following method.
+We can decompose the graph to a set of trees by the following method \cite{forester11}.
 First we identify so called \emph{cut-points} what are the nodes referenced by
 one or more pointer variables or the nodes having more than one incoming edges.
 The cut-points are then numbered by a depth-first traversal of the graph that starts from
@@ -268,7 +268,7 @@ so we are able to accept the forests representing a state of heaps by forest aut
 
 So far we have described how to represent dynamic data structures by forest automata.
 Forest automata can be viewed also as an abstract domain in context of abstract interpretation
-whereas a concrete domain is a set of heaps with allocated data structures.
+whereas a concrete domain is a set of heaps with allocated data structures \cite{atva13}.
 It is also possible to define abstract transformers corresponding to the (concrete) program operations over forest automata.
 The verification procedure is then possible to perform as a symbolic execution
 where the abstract transformers are gradually applied to abstract domain.
@@ -280,7 +280,7 @@ With mentioned approach is possible to represent a dynamic data structure with b
 But there are data structures like a doubly-linked list where each node is a cut-point because
 it is pointed by the next and also the previous member of the list.
 This could lead to the unbounded number of cut-points.
-It possible to resolve this problem by introducing so-called \emph{boxes}.
+It possible to resolve this problem by introducing so-called \emph{boxes} \cite{forester13}.
 The repeating sub-graphs causing unboudness of cut-points are collected to the boxes.
 Then these sub-graphs are replaced by an hyperedge labeled by an appropriate box.
 This transformation changes graph to a new hierarchical hypergraph with bounded number of cut-points.
@@ -315,17 +315,17 @@ More technical details about a heap decomposition and forest automata could be f
 	\label{fig:bwrun}
 \end{figure}
 
-We have already cover how to represent dynamic data structures by forest automata in the previous section.
+We have already covered how to represent dynamic data structures by forest automata in the previous section.
 The forest automata make us able to handle also infinite state spaces
 rising from a possible unboudness of the mentioned dynamic data structures.
-However, the state explosion could still occur what lead
-to nearly impossibility of finish verification procedure checking given properties of a system in real time.
+However, there is still a problem of state explosion that often makes
+nearly impossible to finish verification procedure of a system in real time.
 Therefore the abstraction over the forest automata is introduced.
 The abstraction accelerates the computation by merging more states
 of forest automata to one abstract state.
 The negative effect of the abstraction is the overapproximation of the reachable
 states of an analyzed system.
-In the case of computer programs this leads to finding reachable error states in
+In case of computer programs this leads to finding reachable error states in
 an abstracted state space which are not present in the real system.
 This could be prevented by a refinement of the abstraction
 which avoids repeating of the abstraction of the states
@@ -336,31 +336,31 @@ This abstraction merges states whose languages (note that a language of state is
 when the trees of the languages are compared only to the given depth.
 The main problem of this abstraction technique is its scalability because
 the only way how to scale it is by the parameter defining the depth of tree comparison.
-The more precise abstraction is so called \emph{predicate abstraction} that introduces
-set of predicates and merges the states in which the same predicates hold.
+The more precise abstraction is so called \emph{predicate abstraction} \cite{artmc} that introduces
+a set of predicates and merges the states in which the same predicates hold.
 When a spurious counterexample is found, then the set of predicates is extended by
 a predicate that prevents reaching the spurious counterexample again
-and the verification procedure is rerun with the new predicate.
+and the~verification procedure is rerun with the new predicate.
 
 Finding the new predicate and checking spuriousness of an error is done by performing of \emph{backward run}.
 A~backward run starts from forest automata modelling a heap with a spurious error and
 reverting gradually each abstract operation over the forest automata
 in backward order of the operations.
-When an automata with an empty language is get by an the reverse abstract transformation then the error is spurious.
-The last automaton with a non empty language is then used as a new predicate.
+When an automata with an empty language is get by the reverse abstract transformation then the error is spurious.
+The last automaton of backward run with a non empty language is then used as a new predicate.
 Backward run is illustrated by Figure \ref{fig:bwrun} and the illustration
 is further described in the caption of the figure.
 
 It could be necessary to perform a forest automata intersection during
 the backward run.
-But it is not necessary always because Forester implements many abstract transformers
+But it is not needed always because Forester implements many abstract transformers
 that do not modify forest automata directly but changes only symbolic state of the symbolic execution
 without accessing forest automata.
 The abstract transformers of this kind could be reversed without intersection of forest automata
 from the backward and the forward run what brings better performance of the backward run.
 An example where the intersection is necessary to be done is for example an operation for freeing a memory node.
 The intersection is done between a forest automaton from the backward run and a forest automaton from the forward
-run in state before the abstract transformer has been applied.
+run before the abstract transformer has been applied.
 The result automata is then further used in the backward run.
 
 The goal of this work is to implement backward run and predicate abstraction
@@ -389,13 +389,13 @@ The results in Table \ref{tab:bwres} are the number of points that Forester woul
 in SV-COMP competition with implemented backward run compared to the points earned without backward run.
 The implementation of backward helps in confirming of the new $6$ real errors in the programs in memory safety category and
 of the new $8$ real errors in heap manipulation category.
-Moreover, the $3$ spurious counterexamples have been detected in heap manipulation category.
-The test cases in which a spurious counterexamples will be further resolved by implementing predicate
-abstraction which is currently in progress.
+Moreover, the $3$ spurious counterexamples were detected in heap manipulation category.
+The test cases with a spurious counterexamples will be further resolved by implementing predicate
+abstraction.
 The analyzed programs in SV-COMP benchmark mentioned here includes e.g., programs from LDV (Linux Drivers Verification) project
 containing implementing alternating singly-linked list or manipulation with mutex locks or the programs
 implementing bubble sort over a list implementation from the Linux kernel.
-Note that Forester does not currently successfully process all programs in the test set
+Note that Forester does not successfully process all programs in the test set
 because it does not currently support all the C language constructions.
 It causes that the improvement in SV-COMP scoring is not as good as it would be when
 Forester could analyze all programs in benchmark.
