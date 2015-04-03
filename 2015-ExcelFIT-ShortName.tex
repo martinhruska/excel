@@ -280,20 +280,19 @@ execution it implies that it is possible that there is an error in the~program (
 the forest automata overapproximate the state space of the original program the error could be spurious).
 
 It is possible to represent a dynamic data structure with bounded number of cut-points by the mentioned approach.
-But there are data structures like doubly-linked lists where each node is a cut-point because
+But it cannot be used for data structures with an unbounded number of cut-points like doubly-linked lists.
+The unboudness comes from the fact that each node of a doubly-linked list is a a cut-point because
 it is pointed by the next and also the previous member of the list.
-This could lead to the unbounded number of cut-points.
-It is possible to resolve this problem by introducing so-called \emph{boxes} \cite{forester13}.
-The repeating sub-graphs causing unboudness of cut-points are collected to the boxes.
-Then these sub-graphs are replaced by an hyperedge labeled by an appropriate box.
-This transforms a graph to a new hierarchical hypergraph with bounded number of cut-points.
-It is still possible to decompose either hypergraph or boxes to the tree components in the way
-described above.
-So it is also represent the hypergraph with forest automata.
-This forest automata should be also hierarchical as the graphs are, because they
-should include forest automata of lower level representing boxes in their alphabet.
-The nesting of forest automata to symbols of alphabet of forest automata of higher level
-could be done in more levels so we get hierarchy of forest automata.
+This problem could be solved by introducing so-called \emph{boxes} \cite{forester13}.
+Boxes are symbols hiding the repeating sub-graphs causing unboudness.
+Then these sub-graphs are replaced by an hyperedge labeled by an appropriate box
+and so a new hierarchical hypergraph with bounded number of cut-points is created.
+More precisely, boxes can be viewed as forest automata representing repeating subgraphs.
+So it is still possible to represent the hypergraph with forest automata where
+boxes are also symbols of forest automata.
+We get hierarchical forest automata this way, because forest automata of lower level
+are included as symbols in alphabet of forest automata of higher level.
+Note that a forest automaton of certain level can contain in it alphabet only automata of lower level then its own level.
 
 More technical details about a heap decomposition and forest automata could be found in \cite{forester11, forester13}.
 
@@ -334,13 +333,13 @@ This could be prevented by a refinement of the abstraction
 which avoids repeating of the abstraction of the states
 that lead to the spurious error.
 
-Forester now implements a height abstraction.
+Forester now implements the so called height abstraction.
 This abstraction merges states whose languages (note that a language of state is a set of trees) are the same
 when the trees of the languages are compared only to the given depth.
-The main problem of this abstraction technique is its scalability because
-the only way how to scale it is by the parameter defining the depth of tree comparison.
-The more precise abstraction is so called \emph{predicate abstraction} \cite{artmc} that introduces
-a set of predicates and merges the states in which the same predicates hold.
+The main problem of this abstraction technique is possibility of its fine tuning
+because the only way how to refine it is by the parameter defining the depth of tree comparison.
+The abstraction allowing more fine tuning is so called \emph{predicate abstraction} \cite{artmc}
+that introduces a set of predicates and merges the states in which the same predicates hold.
 When a spurious counterexample is found, then the set of predicates is extended by
 a predicate that prevents reaching the spurious counterexample again
 and the~verification procedure is rerun with the new predicate.
