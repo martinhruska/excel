@@ -379,22 +379,19 @@ complete it and evaluate it on the SV-COMP benchmark.
 
 We mentioned that this work implements either backward run and predicate abstraction only for
 non-hierarchical forest automata.
-The extension of them for hierarchical forest automata is not part
-of this work because of it demanding character.
-But it is definitely a challenging issue for future work
+The extension of them for hierarchical forest automata is definitely a challenging issue for future work
 that will be done next after finishing the implementation of basic predicate abstraction.
 
 \subsection{Evaluation}
 
 The implementation of the backward run has been already finished and evaluate on the SV-COMP benchmark.
-The improvement of the results of Forester are in Table \ref{tab:bwres}.
-The results in Table \ref{tab:bwres} are the number of points that Forester would get
-in SV-COMP competition with implemented backward run compared to the points earned without backward run.
 The implementation of backward helps in confirming of the new $6$ real errors in the programs in memory safety category and
 of the new $8$ real errors in heap manipulation category.
 Moreover, the $3$ spurious counterexamples were detected in heap manipulation category.
 The test cases with a spurious counterexamples will be further resolved by implementing predicate
 abstraction.
+The results are summarized in Table \ref{tab:bwres}.
+in SV-COMP competition with implemented backward run compared to the points earned without backward run.
 The analyzed programs in SV-COMP benchmark mentioned here includes e.g., programs from LDV (Linux Drivers Verification) project
 containing implementing alternating singly-linked list or manipulation with mutex locks or the programs
 implementing bubble sort over a list implementation from the Linux kernel.
@@ -402,21 +399,19 @@ Note that Forester does not successfully process all programs in the test set
 because it does not currently support all the C language constructions.
 It causes that the improvement in SV-COMP scoring is not as good as it would be when
 Forester could analyze all programs in benchmark.
-TODO(MORE DETAILED DESCRIPTION OF TEST CASES.)
 
-\begin{table}[h]
+\begin{table}[bu]
 	\vskip6pt
-	\caption{SV-COMP Benchmark Evaluation. Table shows how implementation of backward run improves
-	a score in SV-COMP competition. The left column gives a number of the points before backward run implementation 
-	and the right column contains the points get with implemented backward run.
-	The points are computed in compliance with SV-COMP rules that can be found in \cite{www:svcomp}.}
+	\caption{SV-COMP Benchmark Evaluation. Table shows the number of errors confirmed
+	to be real and the number of errors determined as spurious by backward run.
+	The two categories of SV-COMP Benchmard are used for this evaluation -- Heap Manipulation and Memory Safety.}
 	\centering
 	\begin{tabular}{llr}
 		\toprule
-		Category & Before & After \\
+		Category & Real & Spurious \\
 		\midrule
-		HeapManipulation & $32$ & $40$ \\
-		MemorySafety & $22$ & $28$ \\
+		HeapManipulation & $8$ & $3$ \\
+		MemorySafety & $6$ & $0$ \\
 		\bottomrule
 	\end{tabular}
 	\label{tab:bwres}
@@ -426,28 +421,28 @@ TODO(MORE DETAILED DESCRIPTION OF TEST CASES.)
 \section{Forester and VATA}
 \label{sec:forvata}
 
-This section describes how Forester has been refactored to be possible to employ \vata\ 
+This section describes how Forester has been refactored to enable employing \vata\ 
 efficient implementation of	tree automata and the operations over them,
 especially checking inclusion of languages of tree automata.
 Forester had its own implementation of tree automata and their operations (in module called TA)
-but it is not as efficient as VATA is and it is also less maintainable
-then using the library that implements the state-of-the-art algorithms.
+but it is not as efficient as VATA and it is also less maintainable
+then using a standalone library that implements the state-of-the-art algorithms.
 
 VATA provides two encodings of tree automata -- explicit and semi-symbolic.
-They differs mainly in a way of representation of transition relation of tree automata.
+They differ mainly in the way of representation of transition relation of tree automata.
 The explicit encoding stores the transitions in an explicit hash tables while the semi-symbolic
 uses a multi-binary decision diagram.
 We use the implementation of explicit encoding of TA in this work because
-it is currently the only one that support the most of needed operations over TA and it is also more efficient than
-the semi-symbolic encoding for the purposes of Forester because no large alphabets are used during the verification procedure
-so the advantage of the semi-symbolic encoding would not be fully utilized here.
+it is currently the only one that support the most of needed operations over TA.
+It is also more efficient than the semi-symbolic encoding for the purposes of Forester because no large alphabets are used during the verification procedure.
+So the advantage of the semi-symbolic encoding would not be fully utilized here.
 
 Forester implementation is currently far from being mature and
 high structural dependencies is one of its bottlenecks.
 So the first thing needed to be done was reducing number of dependencies between classes,
 especially reduction of dependencies on the existing Forester module implementing tree automata.
-One of approaches how to do this is applying \emph{Law of Demeter} \cite{lod89} to the code manipulating tree automata what practically
-means that classes using TA explicitly should implement methods providing information about TA instead of providing instance of TA object itself.
+Applying \emph{Law of Demeter} \cite{lod89} to the code manipulating tree automata is one of approaches how to do it. 
+It practically means that classes using TA explicitly should implement methods providing information about TA instead of providing instance of TA object itself.
 Applying the Law of Demeter reduces knowledge needed about implementation of TA module across the whole project.
 Another way of reducing structural dependencies is making all possible methods and members of TA private (in sense of C++ language \cite{stroustrup13}).
 This creates an explicit tight interface to tree automata module so it is easier to see which methods needs to implement
@@ -507,8 +502,8 @@ The implementation of predicate abstraction is currently in progress.
 
 The future work after finishing the basic predicate abstraction could be in generalizing the method to the hierarchical forest automata
 what enables Forester to analyze more test cases.
-Forester code needs also to be further refactored and greater support for C language construction should be implemented for Forester to be
-able to analyze more real word programs.
+Forester code needs also to be further refactored and greater support for C language construction should be implemented to make Forester able
+to analyze more real word programs.
 The mentioned work should help Forester to win SV-COMP 2016 competition.
 %\textbf{[Highlights of Results]} Particular numbers. Remind the reader that the paper matters.
 %\phony{Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempus fermentum ipsum at venenatis. Curabitur ultricies, mauris eu ullamcorper mattis, ligula purus dapibus mi, vel dapibus odio nulla et ex. Sed viverra cursus mattis. Suspendisse ornare semper condimentum. Interdum et malesuada fames ac ante ipsum.}
