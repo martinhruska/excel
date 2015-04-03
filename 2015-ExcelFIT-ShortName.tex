@@ -199,7 +199,7 @@ Finally, conclusions of the work takes a place in Section \ref{sec:concl}.
 %--------------------------------------------------------
 %--------------------------------------------------------
 %--------------------------------------------------------
-\section{High Level Overview}
+\section{High Level Overview of Verification Method}
 \label{sec:overview}
 
 \begin{figure}[t]
@@ -261,11 +261,13 @@ The new nodes replacing cut-points are labeled by a number referencing to the tr
 The example at Figure~\ref{fig:graph} shows that tree $1$ and tree $3$ contains the nodes with the label $\overline{2}$
 referencing tree~$2$.
 
-The set of trees (created by graph decomposition) is called forest.
+The tuple of trees (created by graph decomposition) is called forest.
 Such a forest could be accepted by a forest automaton as a member of it language.
 A~forest automaton is a tuple of finite tree automata which are automata accepting trees instead of words (in comparison with finite automata).
-The tree automata within a forest automaton are interconnected by references (that are also symbols in their alphabet)
-so we are able to accept the forests representing a state of heaps by forest automata.
+The tree automata within a forest automaton are interconnected by references (that are also symbols in their alphabet).
+Each of the tree automata accepts a set of trees and so we get a language of a forest
+automaton by their Cartesian product what is a set of tuples of trees (connected by the mentioned references).
+These tuples of trees then could be forests representing a state of heaps.
 
 So far we have described how to represent dynamic data structures by forest automata.
 Forest automata can be viewed also as an abstract domain in context of abstract interpretation
@@ -277,14 +279,14 @@ When an error like an invalid memory reference or invalid free is detected durin
 execution it implies that it is possible that there is an error in the~program (but because
 the forest automata overapproximate the state space of the original program the error could be spurious).
 
-With mentioned approach is possible to represent a dynamic data structure with bounded number of cut-points.
-But there are data structures like a doubly-linked list where each node is a cut-point because
+It is possible to represent a dynamic data structure with bounded number of cut-points by the mentioned approach.
+But there are data structures like doubly-linked lists where each node is a cut-point because
 it is pointed by the next and also the previous member of the list.
 This could lead to the unbounded number of cut-points.
-It possible to resolve this problem by introducing so-called \emph{boxes} \cite{forester13}.
+It is possible to resolve this problem by introducing so-called \emph{boxes} \cite{forester13}.
 The repeating sub-graphs causing unboudness of cut-points are collected to the boxes.
 Then these sub-graphs are replaced by an hyperedge labeled by an appropriate box.
-This transformation changes graph to a new hierarchical hypergraph with bounded number of cut-points.
+This transforms a graph to a new hierarchical hypergraph with bounded number of cut-points.
 It is still possible to decompose either hypergraph or boxes to the tree components in the way
 described above.
 So it is also represent the hypergraph with forest automata.
@@ -475,12 +477,12 @@ in the original Forester TA module).
 \emph{VATAAdapter} also sometimes performs mentioned conversion of the data types.
 There are methods implemented by adapter not presented in VATA like method \emph{unfoldAtRoot}
 performing an unfolding, an operation specific for forest automata.
-The methods of this kind are very Forester specific so it is not sensible to add them to general purpose library like VATA is
-and it is better to implement them in interface like class VATAAdapter is.
+The methods of this kind are very Forester specific so it is not sensible to add them to general purpose library as VATA
+and it is better to implement them in interface like class VATAAdapter.
 
 We originally supposed that it would be possible to keep the original TA module along VATA adapter
 to be able to easily switch between them.
-However it has shown that this would bring high overhead in some situations.
+However it emerged that this would bring high overhead in some situations.
 E.g., a~conversion of some data types would be needed in this case
 what is overhead compared to implementation where data types compatible with VATA are used directly in the Forester code.
 Hence we decided to remove the original tree automata module and further support only version of Forester with \vata.
@@ -494,8 +496,7 @@ Hence we decided to remove the original tree automata module and further support
 
 The main goals of this thesis were (a) to implement version of Forester tool that uses the VATA library for tree automata representation and manipulation
 and (b) to extend verification procedure based on forest automata with backward run for detection of the spurious errors found in the analysed program.
-The theory of forest automata and related theory of tree automata and the verification procedure based on forest automata has been studied
-and it basic principles are described in this paper.
+The theory of forest automata and related theory of tree automata and the verification procedure based on forest automata has been studied to fulfill the two goals.
 The connection of Forester and \vata\ was designed and implemented after the analysis of the both tools.
 Forester had to be refactored for this purposes.
 
@@ -506,7 +507,7 @@ The implementation of predicate abstraction is currently in progress.
 
 The future work after finishing the basic predicate abstraction could be in generalizing the method to the hierarchical forest automata
 what enables Forester to analyze more test cases.
-Forester code needs also to be further refactored and greater support for C language construction should be implemented to be
+Forester code needs also to be further refactored and greater support for C language construction should be implemented for Forester to be
 able to analyze more real word programs.
 The mentioned work should help Forester to win SV-COMP 2016 competition.
 %\textbf{[Highlights of Results]} Particular numbers. Remind the reader that the paper matters.
