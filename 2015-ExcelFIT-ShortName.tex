@@ -355,28 +355,32 @@ The last automaton of backward run with a non empty language is then used as a n
 Backward run is illustrated by Figure \ref{fig:bwrun} and the illustration
 is further described in the caption of the figure.
 
-It could be necessary to perform a forest automata intersection during
-the backward run.
-But it is not needed always because Forester implements many abstract transformers
-that do not modify forest automata directly but changes only symbolic state of the symbolic execution
-without accessing forest automata.
-The abstract transformers of this kind could be reversed without intersection of forest automata
-from the backward and the forward run what brings better performance of the backward run.
-An example where the intersection is necessary to be done is for example an operation for freeing a memory node.
-The intersection is done between a forest automaton from the backward run and a forest automaton from the forward
-run before the abstract transformer has been applied.
-The result automata is then further used in the backward run.
+An operation often needed during backward run is a forest automata intersection
+that is neccesary for some reverse abstract transformers.
+The intersection is a general operation over forest automata,
+not directly related to backward run.
+It is sometimes done during the backward run between a forest automaton from forward run before
+an abstract transformer application and the last forest automaton from backward state.
+The resulting forest automaton is then further used in backward run after an applcation of
+of the related reverse abstract transformer.
+This is illustrated by Figure \ref{fig:bwrun}.
+Consider an oval representing a language $L(X_{k+1})$ which is the language
+of a forest automaton in backward.
+The next state in backward run consisting language $L(X_{k})$ of a forest automata is
+get by application of the reverse abstract transformer (illustrated by the doted lines) on the intersection
+of backward run state language $L(X_{k+1})$ and forward run state language $L(M^{\alpha}_{k+1})$.
+It is not necessary to do the intersection before each reverse of an abstract transformer in Forester
+but it is neede for a few of them.
 
 The goal of this work is to implement backward run and predicate abstraction
 for non-hierarchical forest automata.
 It includes design of the reverse operations for abstract transformers over
 the abstract domain and the application of predicate abstraction on forest automate.
 Moreover, as it was already mentioned the intersection of foster automata is needed in some reverse
-operations of backward run so it is also part of this work to implement it.
-Forester has some basic implementation of both, the reverse microcode instructions and
-intersection of forest automata.
-However, the implementation was not mature enough so it was necessary to
-complete it and evaluate it on the SV-COMP benchmark.
+operations of backward run.
+So it is also part of this work to design it and implement it.
+The realization of intersection is not only usefull for backwar run but
+it is nice general contribution to the theory of forest automata.
 
 We mentioned that this work implements either backward run and predicate abstraction only for
 non-hierarchical forest automata.
