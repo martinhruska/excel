@@ -313,7 +313,7 @@ More technical details about a heap decomposition and forest automata could be f
 		A~found error is shown as a red area in the last oval.
 		The backward run starts from this error and it finds
 		that an error is spurious because an intersection (the orange areas) of forest automata language from backward (the blue ovals)
-		and forward (the green and yellow area) run is empty at level of the symbolic state with language $L(M^{\alpha}_{k-1})$.}
+		and forward (the green and yellow areas) run is empty at level of the symbolic state with language $L(M^{\alpha}_{k-1})$.}
 	\label{fig:bwrun}
 \end{figure}
 
@@ -359,18 +359,21 @@ An operation often needed during backward run is a forest automata intersection
 that is neccesary for some reverse abstract transformers.
 The intersection is a general operation over forest automata,
 not directly related to backward run.
-It is sometimes done during the backward run between a forest automaton from forward run before
-an abstract transformer application and the last forest automaton from backward state.
-The resulting forest automaton is then further used in backward run after an applcation of
-of the related reverse abstract transformer.
+Although the intersection is one of the basic operations in automata theory,
+it has not been yet implemented and it realization would enrich the whole forest automata domain.
+The intersection is sometimes needed to be done during the backward run between a forest automaton from forward run
+and the last forest automaton from backward run.
+The resulting forest automaton is then further used in backward run after an application
+of the corresponding reverse abstract transformer.
 This is illustrated by Figure \ref{fig:bwrun}.
 Consider an oval representing a language $L(X_{k+1})$ which is the language
-of a forest automaton in backward.
-The next state in backward run consisting language $L(X_{k})$ of a forest automata is
-get by application of the reverse abstract transformer (illustrated by the doted lines) on the intersection
-of backward run state language $L(X_{k+1})$ and forward run state language $L(M^{\alpha}_{k+1})$.
+of a forest automaton in backward and an abstract transformer $\beta$ such that $\beta(L(M^{\alpha}_{k})) = L(M_{k+1})$.
+The next state in backward run with forest automata language $L(X_{k})$ is
+get by an application of the reverse abstract transformer $\beta^{-1}$ (illustrated by the doted lines) on the intersection
+(represented by the red and the orange area) of backward run state language $L(X_{k+1})$
+and forward run state language $L(M^{\alpha}_{k+1})$.
 It is not necessary to do the intersection before each reverse of an abstract transformer in Forester
-but it is neede for a few of them.
+but it is needed for a few of them.
 
 The goal of this work is to implement backward run and predicate abstraction
 for non-hierarchical forest automata.
@@ -379,7 +382,7 @@ the abstract domain and the application of predicate abstraction on forest autom
 Moreover, as it was already mentioned the intersection of foster automata is needed in some reverse
 operations of backward run.
 So it is also part of this work to design it and implement it.
-The realization of intersection is not only usefull for backwar run but
+As it was said, the realization of intersection is not only usefull for backward run but
 it is nice general contribution to the theory of forest automata.
 
 We mentioned that this work implements either backward run and predicate abstraction only for
