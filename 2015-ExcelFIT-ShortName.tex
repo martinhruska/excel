@@ -161,7 +161,7 @@ superior in its flexibility.
 However, this thesis is focused on a verification procedure based on a concept of forest automata (FA) which
 combines benefits of the both mentioned approaches.
 
-Forest automata has been introduce in \cite{forester11,forester12} and they are an extension of finite automata or more precisely extension of finite tree automata (TA).
+Forest automata (FA) has been introduce in \cite{forester11,forester12} and they are an extension of finite automata or more precisely extension of finite tree automata (TA).
 They are used as an abstract domain in related verification procedure over which a symbolic execution of a analyzed program is performed.
 A~prototype of this verification procedure has been implemented in a tool called \emph{Forester}.
 Forester verifies programs written in C language and it can detect invalid dereferences, invalid free, memory leaks and also reachability of an error label.
@@ -253,7 +253,7 @@ The graph at Figure \ref{fig:graph} has the three cut-points that are labeled by
 $2$ and $3$ what denotes the node order in the cut-points ordering.
 Then the graph is split to the trees with cut-point as the roots.
 The new trees do not contain no cut-points.
-The graph at Figure \ref{fig:graph} is decomposed to the three trees is shown at the bottom of the figure.
+The graph at top of Figure \ref{fig:graph} is decomposed to the three trees that are shown at the bottom of the figure.
 Finally, we need to take care of is redirecting the edges, which lead to the nodes
 marked as the cut-points, to the new nodes because the cut-point are now roots of trees and
 so they cannot have the incoming edges.
@@ -273,7 +273,7 @@ So far we have described how to represent dynamic data structures by forest auto
 Forest automata can be viewed also as an abstract domain in context of abstract interpretation
 whereas a concrete domain is a set of heaps with allocated data structures \cite{atva13}.
 It is also possible to define abstract transformers corresponding to the (concrete) program operations over forest automata.
-The verification procedure is then possible to perform as a symbolic execution
+The verification procedure is then performed as a symbolic execution
 where the abstract transformers are gradually applied to abstract domain.
 When an error like an invalid memory reference or invalid free is detected during the symbolic
 execution it implies that it is possible that there is an error in the~program (but because
@@ -304,16 +304,17 @@ More technical details about a heap decomposition and forest automata could be f
 	\includegraphics[width=1\linewidth]{artmc.png}
 	\caption{
 		Figure is taken from \cite{artmc}.
-		Figure shows a forest automata language before (green area)
-		and after (yellow area) abstraction.
+		Figure shows a forest automaton language $L(M_i)$ before (green area)
+		and language $L(M_i^{\alpha})$ after (yellow area) abstraction where
+		$i$ is the order of the state within symbolic execution.
 		One oval consisting green and yellow part represents
 		language of a forest automaton in a symbolic state of symbolic execution.
 		Figure also shows how a forest automaton (and it language) is gradually changed
-		by abstract transformers what is illustrated by lines connecting ovals.
+		by abstract transformers during symbolic execution what is illustrated by lines connecting ovals.
 		A~found error is shown as a red area in the last oval.
 		The backward run starts from this error and it finds
 		that an error is spurious because an intersection (the orange areas) of forest automata language from backward (the blue ovals)
-		and forward (the green and yellow areas) run is empty at level of the symbolic state with language $L(M^{\alpha}_{k-1})$.}
+		and forward (the green and yellow areas) run is empty at level of the symbolic state with the language $L(M^{\alpha}_{k-1})$.}
 	\label{fig:bwrun}
 \end{figure}
 
@@ -322,35 +323,39 @@ The forest automata make us able to handle also infinite state spaces
 rising from a possible unboudness of the mentioned dynamic data structures.
 However, there is still a problem of state explosion that often makes
 nearly impossible to finish verification procedure of a system in real time
-and moreover, not even termination of verification procedure is guaranteed.
+and moreover, not even termination of verification procedure is guaranteed at all.
 Therefore the abstraction over the forest automata is introduced to increase probability of termination
 and to accelerate the method.
 The abstraction speeds up the computation by merging more states
 of forest automata to one abstract state.
-Another effect of the abstraction is the overapproximation of the reachable
+But the abstraction also includes the overapproximation of the reachable
 states of an analyzed system.
 This can lead to reaching the error states in
 an abstracted state space which are not present in the real system (the real system is a computer program in this case).
-We can prevent reaching such spurious counterexamples by a refinement of the abstraction
-which avoids repeating of the abstraction of the states
+We can prevent reaching such spurious counterexamples by a refinement of the~abstraction
+what avoids repeating of the abstraction of the states
 that lead to the spurious error.
+The employment of abstraction over forest (and tree) automata in this work is based on \emph{abstract tree regular model checking} \cite{artmc}
+and the refinement of abstraction is based on \emph{counterexample-guided abstract refinement} \cite{cegar}
+as it was mentioned in the introduction section.
 
-Forester now implements the so called height abstraction.
-This abstraction merges states whose languages (note that a language of state is a set of trees) are the same
+Forester now implements so called height abstraction.
+This abstraction merges states whose languages (note that a language of state is a set of trees) are equal
 when the trees of the languages are compared only to the given depth.
-The main problem of this abstraction technique is possibility of its fine tuning
-because the only way how to refine it is by the parameter defining the depth of tree comparison.
+The main problem of this abstraction technique is low ability of refinement.
+The only way how to refine it is by the parameter defining the depth of tree comparison
+what does not ensure that the found spurious error would not be found again.
 The abstraction allowing more fine tuning is so called \emph{predicate abstraction} \cite{artmc}
 that introduces a set of predicates and merges the states in which the same predicates hold.
 When a spurious counterexample is found, then the set of predicates is extended by
 a predicate that prevents reaching the spurious counterexample again
 and the~verification procedure is rerun with the new predicate.
 
-Finding the new predicate and checking spuriousness of an error is done by performing of \emph{backward run}.
-A~backward run starts from forest automata modelling a heap with a spurious error and
+Finding the new predicate and checking spuriousness of an error is done by performing \emph{backward run}.
+A~backward run starts from forest automata modelling a heap with a found error and
 reverting gradually each abstract operation over the forest automata
-in backward order of the operations.
-When an automata with an empty language is get by the reverse abstract transformation then the error is spurious.
+in~backward order to the (forward) symbolic execution.
+When an automata with an empty language is get by a reverse abstract transformation then the error is spurious.
 The last automaton of backward run with a non empty language is then used as a new predicate.
 Backward run is illustrated by Figure \ref{fig:bwrun} and the illustration
 is further described in the caption of the figure.
@@ -360,7 +365,7 @@ that is neccesary for some reverse abstract transformers.
 The intersection is a general operation over forest automata,
 not directly related to backward run.
 Although the intersection is one of the basic operations in automata theory,
-it has not been yet implemented and it realization would enrich the whole forest automata theory.
+it has not yet been implemented and it realization would enrich the whole forest automata theory.
 The intersection is sometimes needed to be done during the backward run between a forest automaton from forward run
 and the last forest automaton from backward run.
 The resulting forest automaton is then further used in backward run after an application
@@ -370,9 +375,9 @@ Consider an oval representing a language $L(X_{k+1})$ which is the language
 of a forest automaton in backward and an abstract transformer $\beta$ such that $\beta(L(M^{\alpha}_{k})) = L(M_{k+1})$.
 The next state in backward run with forest automata language $L(X_{k})$ is
 get by an application of the reverse abstract transformer $\beta^{-1}$ (illustrated by the doted lines) on the intersection
-(represented by the red and the orange area) of backward run state language $L(X_{k+1})$
-and forward run state language $L(M^{\alpha}_{k+1})$.
-It is not necessary to do the intersection before each reverse of an abstract transformer in Forester
+(represented by the red and the orange area) of language $L(X_{k+1})$ from backward run 
+and language $L(M^{\alpha}_{k+1})$ from state forward run.
+It is not necessary to do the intersection before each reverse abstract transformer application in Forester
 but it is needed for a few of them.
 
 The goal of this work is to implement backward run and predicate abstraction
@@ -399,9 +404,8 @@ Moreover, the $3$ spurious counterexamples were detected in heap manipulation ca
 The test cases with a spurious counterexamples will be further resolved by implementing predicate
 abstraction.
 The results are summarized in Table \ref{tab:bwres}.
-in SV-COMP competition with implemented backward run compared to the points earned without backward run.
-The analyzed programs in SV-COMP benchmark mentioned here includes e.g., programs from LDV (Linux Drivers Verification) project
-containing implementing alternating singly-linked list or manipulation with mutex locks or the programs
+The analyzed programs in SV-COMP benchmark includes e.g., programs from LDV (Linux Drivers Verification) project
+containing implementing alternating singly-linked list or manipulation with mutex locks, or the programs
 implementing bubble sort over a list implementation from the Linux kernel.
 Note that Forester does not successfully process all programs in the test set
 because it does not currently support all the C language constructions.
@@ -441,13 +445,13 @@ They differ mainly in the way of representation of transition relation of tree a
 The explicit encoding stores the transitions in an explicit hash tables while the semi-symbolic
 uses a multi-binary decision diagram.
 We use the implementation of explicit encoding of TA in this work because
-it is currently the only one that support the most of needed operations over TA.
+it is currently the only one that supports the most of needed operations over TA.
 It is also more efficient than the semi-symbolic encoding for the purposes of Forester because no large alphabets are used during the verification procedure.
 So the advantage of the semi-symbolic encoding would not be fully utilized here.
 
 Forester implementation is currently far from being mature and
 high structural dependencies is one of its bottlenecks.
-So the first thing needed to be done was reducing number of dependencies between classes,
+So the first thing needed to be done is reducing number of dependencies between classes,
 especially reduction of dependencies on the existing Forester module implementing tree automata.
 Applying \emph{Law of Demeter} \cite{lod89} to the code manipulating tree automata is one of approaches how to do it. 
 It practically means that classes using TA explicitly should implement methods providing information about TA instead of providing instance of TA object itself.
@@ -499,7 +503,7 @@ Hence we decided to remove the original tree automata module and further support
 
 The main goals of this thesis were (a) to implement version of Forester tool that uses the VATA library for tree automata representation and manipulation
 and (b) to extend verification procedure based on forest automata with backward run for detection of the spurious errors found in the analysed program.
-The theory of forest automata and related theory of tree automata and the verification procedure based on forest automata has been studied to fulfill the two goals.
+The theory of forest automata, the related theory of tree automata and the verification procedure based on forest automata has been studied to fulfill the two goals.
 The connection of Forester and \vata\ was designed and implemented after the analysis of the both tools.
 Forester had to be refactored for this purposes.
 
@@ -508,7 +512,7 @@ The second goal is partly finished.
 The backward run with needed forest automata intersection for non-hierarchical forest automata has been completed and evaluated on SV-COMP benchmark.
 The implementation of predicate abstraction is currently in progress.
 
-The future work after finishing the basic predicate abstraction could be in generalizing the method to the hierarchical forest automata
+The future work after finishing the basic predicate abstraction could be generalizing the method to the hierarchical forest automata
 what enables Forester to analyze more test cases.
 Forester code needs also to be further refactored and greater support for C language construction should be implemented to make Forester able
 to analyze more real word programs.
