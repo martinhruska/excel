@@ -85,7 +85,7 @@
   The second goal of this thesis is to extend forest automata based verification with backward run that checks whether
   a found error is a spurious or real one what could be used for refinement of predicate abstraction.
   The first goal has been already fulfill and the variant of Forester using the VATA library participated in the competition SV-COMP 2015.
-  The part of the second goal is done only partially since the backward run is already finished and predicate abstraction implementation is
+  The part of the second goal is done only partially -- the backward run is already finished and predicate abstraction implementation is
   in progress.
 }
 
@@ -137,12 +137,12 @@ Moreover finding some errors during testing does not mean that all errors are el
 The mentioned weakness of testing can be resolved by \emph{formal verification}
 which is another approach to checking program correctness.
 Formal verification is method for checking whether a given system meets a given specification \cite{fav:lecture}.
-There are four main branches of formal verification.
+There are three main branches of formal verification.
 The first one is \emph{model checking} which systematically explores the states of a model (e.g. model of a program) to
 prove that a property holds along the whole model.
 The second approach is \emph{static analysis} which is done over a source code (or some modification of it) of a system
 without its explicit execution.
-The third approach is \emph{abstract interpretation} where the analysis is performed by
+The part of static analysis is important and very widely used approach called \emph{abstract interpretation} where the analysis is performed by
 applying abstract transformers corresponding to the original program semantics over an abstract domain.
 The last one is \emph{theorem proving}.
 It proves the program in a standard mathematical way -- starting from axioms and proving theorems to
@@ -181,6 +181,7 @@ which enables checking spuriousness of an error found in a program.
 The error could be spurious because too strong abstraction over FA is used.
 The information gained by backward run could be used for the refinement of \emph{predicate abstraction} (one kind of abstraction over FA)
 to prevent verification procedure from getting the same spurious error again.
+This way of gradual refinement is based on \emph{counterexample-guided abstract refinement} (CEGAR) \cite{cegar}.
 However, Forester does not use predicate abstraction but \emph{height abstraction} now
 because predicate abstraction needs the backward run to be fully functional.
 Height abstraction is less precise and less flexible compared to predicate abstraction so implementing predicate abstraction
