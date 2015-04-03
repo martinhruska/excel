@@ -321,15 +321,17 @@ We have already covered how to represent dynamic data structures by forest autom
 The forest automata make us able to handle also infinite state spaces
 rising from a possible unboudness of the mentioned dynamic data structures.
 However, there is still a problem of state explosion that often makes
-nearly impossible to finish verification procedure of a system in real time.
-Therefore the abstraction over the forest automata is introduced.
-The abstraction accelerates the computation by merging more states
+nearly impossible to finish verification procedure of a system in real time
+and moreover, not even termination of verification procedure is guaranteed.
+Therefore the abstraction over the forest automata is introduced to increase probability of termination
+and to accelerate the method.
+The abstraction speeds up the computation by merging more states
 of forest automata to one abstract state.
-The negative effect of the abstraction is the overapproximation of the reachable
+Another effect of the abstraction is the overapproximation of the reachable
 states of an analyzed system.
-In case of computer programs this leads to finding reachable error states in
-an abstracted state space which are not present in the real system.
-This could be prevented by a refinement of the abstraction
+This can lead to reaching the error states in
+an abstracted state space which are not present in the real system (the real system is a computer program in this case).
+We can prevent reaching such spurious counterexamples by a refinement of the abstraction
 which avoids repeating of the abstraction of the states
 that lead to the spurious error.
 
