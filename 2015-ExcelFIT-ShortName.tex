@@ -75,16 +75,16 @@
 %--------------------------------------------------------
 
 \Abstract{
-  Forest automata are formalism used for analysis and verification of programs manipulating dynamic data structures.
-  A~shape analysis employing forest automata has been implemented in Forester tool.
+  Forest automata ara one of the formalisms recently used for analysis and verification of programs manipulating dynamic data structures.
+  In the area of shape analysis, there exists a tool Forester basend of forest automata.
   Forest automata are based on tree automata and Forester has its own implementation of tree automata.
   However, there is the VATA library which implements the efficient algorithms for the tree automata manipulation,
   especially the efficient algorithms for the checking inclusion of languages of tree automata what is an operation
   crucial also for the verification procedure based on forest automata.
-  The first goal of this thesis is to implement a version of Forester tool that uses the VATA library for tree automata manipulation.
-  The second goal of this thesis is to extend forest automata based verification with backward run that checks whether
-  a found error is a spurious or real one what could be used for refinement of predicate abstraction.
-  The first goal has been already fulfill and the variant of Forester using the VATA library participated in the competition SV-COMP 2015.
+  The first goal of this work is to implement a version of Forester tool that uses the VATA library for tree automata manipulation.
+  The second goal of this work is to extend forest automata based verification with backward run that checks whether
+  a found error is a spurious or a real one what could be used for refinement of predicate abstraction.
+  The first goal has been already fulfilled and the variant of Forester using the VATA library participated in the competition SV-COMP 2015.
   The part of the second goal is done only partially -- the backward run is already finished and predicate abstraction implementation is
   in progress.
 }
@@ -121,28 +121,28 @@ The importance of computers in our everyday life has largely increased over the 
 A~lot of us can only hardly imagine doing their jobs without help of an appropriate computer program
 and we also spend a plenty of time using computers (e.g. personal computers or mobile devices) in leisure time.
 The~computer programs are also often used in very critical instances like autopilot in an airplane.
-But the growing number of applications of computer programs brings also need for their greater safety and security.
+But the growing number of applications of computer programs brings also the need for their greater safety and security.
 
 However, a guarantee of software safety and correctness is not an easy task
-because the programs often go through many states during computation
-and it could be very time and (memory) space demanding or even impossible to check whether no undesirable thing
+because the programs often go through many states during the computation
+and it could be very time and space consuming or even impossible to check whether no undesirable behavior
 happens in any of those states.
-One approach to ensure software quality is \emph{testing} (and dynamic analysis) which is basically based
+One of the approaches to ensure the software quality is \emph{testing} (and dynamic analysis) which is basically based
 on running a program in the different contexts and with the different inputs
-and checking whether a program behavior and the outputs are the expected ones.
-This method can satisfy many of the requirements for software quality and often cover the great space of the program behaviors
+and matching a program behavior and the outputs with the expected ones.
+This method can satisfy many of the requirements for the software quality and often cover the great space of the program behaviors
 but on the~other side it is only possible to prove presence of the~errors using testing not their absence \cite{dijkstra}.
 Moreover finding some errors during testing does not mean that all errors are eliminated.
 
 The mentioned weakness of testing can be resolved by \emph{formal verification}
-which is another approach to checking program correctness.
-Formal verification is method for checking whether a given system meets a given specification \cite{fav:lecture}.
+which is another approach to checking the program correctness.
+Formal verification is the method for checking whether a given system meets a given specification \cite{fav:lecture}.
 There are three main branches of formal verification.
 The first one is \emph{model checking} which systematically explores the states of a model (e.g. model of a program) to
 prove that a property holds along the whole model.
 The second approach is \emph{static analysis} which is done over a source code (or some modification of it) of a system
 without its explicit execution.
-The part of static analysis is important and very widely used approach called \emph{abstract interpretation} where the analysis is performed by
+One of the important and very widely used approaches in static analysis is called \emph{abstract interpretation} where the analysis is performed by
 applying abstract transformers corresponding to the original program semantics over an abstract domain.
 The last one is \emph{theorem proving}.
 It proves the program in a standard mathematical way -- starting from axioms and proving theorems to
@@ -155,34 +155,34 @@ The properties checked for this class of programs are for example checking wheth
 pointers are dereferenced (no invalid dereferences), whether all allocated memory on a heap is also freed
 during the program execution (no memory leaks) or whether there is not freed pointer without assigned memory (no invalid free).
 There are different approaches to this kind of static analysis with the different advantages.
-For example, the approach based on \emph{separation logic} \cite{seplog,seplog07} provides scalability of a verification procedure.
+For example, the approach based on \emph{separation logic} \cite{seplog,seplog07} provides great scalability of a verification procedure.
 On the other side, the automata based approach, particularly \emph{abstract tree regular model checking} (ATRMC) \cite{artmc}, is
-superior in its flexibility.
-However, this thesis is focused on a verification procedure based on a concept of forest automata (FA) which
+superior in its flexibility and generality.
+However, this work is focused on a verification procedure based on a concept of forest automata (FA) which
 combines benefits of the both mentioned approaches.
 
 Forest automata (FA) has been introduce in \cite{forester11,forester12} and they are an extension of finite automata or more precisely extension of finite tree automata (TA).
 They are used as an abstract domain in related verification procedure over which a symbolic execution of a analyzed program is performed.
-A~prototype of this verification procedure has been implemented in a tool called \emph{Forester}.
-Forester verifies programs written in C language and it can detect invalid dereferences, invalid free, memory leaks and also reachability of an error label.
-It is yet able to verify non-trivial data structures like the skip-lists of the second and the third level
+A~prototype of this verification procedure has been implemented in the tool called \emph{Forester}.
+Forester verifies programs written in C~language and it can detect safety violations like invalid dereferences, invalid frees, memory leaks and also reachability of an error label.
+It is yet able to verify non-trivial data structures like skip-lists of the second and the third level
 but there is still a room for its improvement.
-E.g., Forester currently does not support the complete C language syntax and
+E.g., Forester currently does not support the complete C language syntax and %TODO
 it is not also yet possible to check whether a found error is real or spurious.
 It is also needed to refactore some parts of Forester code before an extension of the tool.
-A~general goal of this thesis is improving Forester in the areas described further.
+A~general goal of this work is to improve Forester in the areas described further.
 
-Since FA are highly related to the finite tree automata the first of the goals of the thesis is to implement
-a version of Forester using \vata\ -- state-of-the-art library for TA manipulation \cite{libvata}.
+Since FA are highly related to the finite tree automata the first of the goals of the work is to change
+the underlying implementation of finite tree automata in Forester to \vata\ -- state-of-the-art library for TA manipulation \cite{libvata}.
 Particularly, this consists creating an interface between Forester and VATA to employ VATA as a TA library for Forester backend
-which should bring better maintainability and modularity then having a special TA library implementation within Forester as it is now.
-The second goal of this thesis is to design and implement \emph{backward run} for FA based verification
+which should bring better maintainability and modularity than having a special TA library implementation within Forester as it is now.
+The second goal of this work is to design and implement \emph{backward run} for FA based verification
 which enables checking spuriousness of an error found in a program.
 The error could be spurious because too strong abstraction over FA is used.
 The information gained by backward run could be used for the refinement of \emph{predicate abstraction} (one kind of abstraction over FA)
 to prevent verification procedure from getting the same spurious error again.
 This way of gradual refinement is based on \emph{counterexample-guided abstract refinement} (CEGAR) \cite{cegar}.
-However, Forester does not use predicate abstraction but \emph{height abstraction} now
+However, Forester does not currenly use the mentioned predicate abstraction but \emph{height abstraction} now %TODO
 because predicate abstraction needs the backward run to be fully functional.
 Height abstraction is less precise and less flexible compared to predicate abstraction so implementing predicate abstraction
 enables analysis of even more complex data structures like red-black trees.
@@ -191,9 +191,9 @@ A~part of the second goal is an implementation of predicate abstraction using ba
 This paper is structured as follows.
 In Section \ref{sec:overview} a high level overview of shape analysis based on forest automata
 is given.
-Then the closer description of backward run and predicate abstraction is introduced in Section \ref{sec:br}.
+Then the closer description of backward run and predicate abstraction takes a place in Section \ref{sec:br}.
 Section \ref{sec:forvata} provides description of modification of Forester to use the VATA library as a backend.
-Finally, conclusions of the work takes a place in Section \ref{sec:concl}.
+Finally, conclusions of the work is given in Section \ref{sec:concl}.
 
 %--------------------------------------------------------
 %--------------------------------------------------------
@@ -214,27 +214,27 @@ Finally, conclusions of the work takes a place in Section \ref{sec:concl}.
     The heap graph representing singly-linked list is shown in the top of Figure.
 	The nodes could be labeled by a pointer variable that references allocated memory cell
 	corresponding to the node.
-	Moreover the cut-points are labeled by an order number that they have in ordering over
+	Moreover the~cut-points are labeled by an order number that they have in an ordering over
 	the cut-points.
 	In this case there are three cut-points with an order number $1$, $2$ and $3$.
-	The graph is split to the three trees shown in the bottom of Figure during the heap decomposition.
-	The new trees could contain the references to another trees, in this case tree $1$ and tree $3$
+	The graph is split to the three trees shown in the bottom of Figure by the heap decomposition.
+	The~new trees could contain the references to another trees, in this case tree $1$ and tree $3$
 	have the nodes referencing tree $2$.}
 	\label{fig:graph}
 \end{figure}
 
 This section provides a high level overview of the verification procedure based
 on forest automata.
-As it was already mentioned we consider C programs manipulating dynamic data structures.
-The simple examples of such structures are a singly-linked list or a binary tree.
+As it was already mentioned we consider only C programs manipulating dynamic data structures.
+The simple examples of such structures are singly-linked lists or binary trees.
 Consider a singly-linked list containing an (integer) data member and a pointer
 to the next item in the list and also
 consider two variables $x,y$ pointing the singly-linked list.
-An instance of the singly-linked list allocated on a heap could be viewed as an oriented graph.
+An instance of the singly-linked list allocated on a heap can be viewed as an oriented graph.
 The nodes of the graph correspond to the allocated memory cells
 and the edges of the graph are related to the pointers referencing
 another allocated memory cell of the list.
-Each node could be labeled by a name of the pointer variables that
+Each node can be labeled by a name of the pointer variables that
 reference the given node or it could be labeled by a data contained in the node.
 The example of such a graph is shown in~Figure~\ref{fig:graph}.
 We omit the data nodes in Figure \ref{fig:graph} for sake of clarity.
@@ -244,55 +244,53 @@ The original heap graph is shown in the top of Figure \ref{fig:graph}.
 The tree decomposition, which is described later, is in the bottom of Figure \ref{fig:graph}.
 
 We can decompose the graph to a set of trees by the following method \cite{forester11}.
-First we identify so called \emph{cut-points} what are the nodes referenced by
+First we identify so called \emph{cut-points} \,---\, the nodes referenced by
 one or more pointer variables or the nodes having more than one incoming edges.
-The cut-points are then numbered by a depth-first traversal of the graph that starts from
+The cut-points are then numbered by a depth-first traversal of the graph starting from
 the nodes referenced by the pointer variables.
 Indeed, the traversal and the numbering defines an ordering over the cut-points.
 The graph at Figure \ref{fig:graph} has the three cut-points that are labeled by the numbers $1$,
 $2$ and $3$ what denotes the node order in the cut-points ordering.
 Then the graph is split to the trees with cut-point as the roots.
-The new trees do not contain no cut-points.
-The graph at top of Figure \ref{fig:graph} is decomposed to the three trees that are shown at the bottom of the figure.
-Finally, we need to take care of is redirecting the edges, which lead to the nodes
-marked as the cut-points, to the new nodes because the cut-point are now roots of trees and
-so they cannot have the incoming edges.
-The new nodes replacing cut-points are labeled by a number referencing to the tree that has a related cut-point like a root.
+The new trees do not contain any cut-points.
+The~graph at top of Figure \ref{fig:graph} is decomposed to the three trees that are shown at the bottom of the figure.
+Finally, we redirect the edges leading to the nodes marked as the cut-points to the new nodes because the cut-points are now roots of the trees.
+The new nodes replacing the cut-points are labeled by a number referencing to the tree that has a related cut-point like a root.
 The example at Figure~\ref{fig:graph} shows that tree $1$ and tree $3$ contains the nodes with the label $\overline{2}$
 referencing tree~$2$.
 
 The tuple of trees (created by graph decomposition) is called forest.
-Such a forest could be accepted by a forest automaton as a member of it language.
+Such a forest could be accepted by a forest automaton as a member of its language.
 A~forest automaton is a tuple of finite tree automata which are automata accepting trees instead of words (in comparison with finite automata).
 The tree automata within a forest automaton are interconnected by references (that are also symbols in their alphabet).
 Each of the tree automata accepts a set of trees and so we get a language of a forest
 automaton by their Cartesian product what is a set of tuples of trees (connected by the mentioned references).
-These tuples of trees then could be forests representing a state of heaps.
+These tuples of trees then represents a state of a heap. %TODO speak about forests
 
-So far we have described how to represent dynamic data structures by forest automata.
+%So far we have described how to represent dynamic data structures by forest automata.
 Forest automata can be viewed also as an abstract domain in context of abstract interpretation
 whereas a concrete domain is a set of heaps with allocated data structures \cite{atva13}.
 It is also possible to define abstract transformers corresponding to the (concrete) program operations over forest automata.
 The verification procedure is then performed as a symbolic execution
 where the abstract transformers are gradually applied to abstract domain.
 When an error like an invalid memory reference or invalid free is detected during the symbolic
-execution it implies that it is possible that there is an error in the~program (but because
-the forest automata overapproximate the state space of the original program the error could be spurious).
+execution it implies that it is possible that there is an error in the~program (but the error could be also spurious because
+the forest automata overapproximate a state space of the original program).
 
 It is possible to represent a dynamic data structure with bounded number of cut-points by the mentioned approach.
 But it cannot be used for data structures with an unbounded number of cut-points like doubly-linked lists.
 The unboudness comes from the fact that each node of a doubly-linked list is a a cut-point because
 it is pointed by the next and also the previous member of the list.
-This problem could be solved by introducing so-called \emph{boxes} \cite{forester13}.
+This problem can be solved by introducing so-called \emph{boxes} \cite{forester13}.
 Boxes are symbols hiding the repeating sub-graphs causing unboudness.
 Then these sub-graphs are replaced by an hyperedge labeled by an appropriate box
 and so a new hierarchical hypergraph with bounded number of cut-points is created.
-More precisely, boxes can be viewed as forest automata representing repeating subgraphs.
+More precisely, boxes can be viewed as forest automata representing the repeating subgraphs.
 So it is still possible to represent the hypergraph with forest automata where
-boxes are also symbols of forest automata.
-We get hierarchical forest automata this way, because forest automata of lower level
+boxes are symbols of forest automata.
+We get hierarchical forest automata this way because forest automata of lower level
 are included as symbols in alphabet of forest automata of higher level.
-Note that a forest automaton of certain level can contain in it alphabet only automata of lower level then its own level.
+Note that a forest automaton of certain level can contain in its alphabet only automata of lower level than its own level.
 
 More technical details about a heap decomposition and forest automata could be found in \cite{forester11, forester13}.
 
@@ -304,9 +302,9 @@ More technical details about a heap decomposition and forest automata could be f
 	\includegraphics[width=1\linewidth]{artmc.png}
 	\caption{
 		Figure is taken from \cite{artmc}.
-		Figure shows a forest automaton language $L(M_i)$ before (green area)
-		and language $L(M_i^{\alpha})$ after (yellow area) abstraction where
-		$i$ is the order of the state within symbolic execution.
+		Figure shows a forest automaton language $L(M_k)$ before (green area)
+		and language $L(M_k^{\alpha})$ after (yellow area) abstraction where
+		$k$ is the order of the state within symbolic execution.
 		One oval consisting green and yellow part represents
 		language of a forest automaton in a symbolic state of symbolic execution.
 		Figure also shows how a forest automaton (and it language) is gradually changed
@@ -319,9 +317,9 @@ More technical details about a heap decomposition and forest automata could be f
 \end{figure}
 
 We have already covered how to represent dynamic data structures by forest automata in the previous section.
-The forest automata make us able to handle also infinite state spaces
+Forest automata are also able to handle also infinite state spaces
 rising from a possible unboudness of the mentioned dynamic data structures.
-However, there is still a problem of state explosion that often makes
+However, there is still the problem of state explosion that often makes
 nearly impossible to finish verification procedure of a system in real time
 and moreover, not even termination of verification procedure is guaranteed at all.
 Therefore the abstraction over the forest automata is introduced to increase probability of termination
@@ -334,15 +332,15 @@ This can lead to reaching the error states in
 an abstracted state space which are not present in the real system (the real system is a computer program in this case).
 We can prevent reaching such spurious counterexamples by a refinement of the~abstraction
 what avoids repeating of the abstraction of the states
-that lead to the spurious error.
-The employment of abstraction over forest (and tree) automata in this work is based on \emph{abstract tree regular model checking} \cite{artmc}
+that lead to this error.
+The application of abstraction over forest (and tree) automata in this work is based on \emph{abstract tree regular model checking} \cite{artmc}
 and the refinement of abstraction is based on \emph{counterexample-guided abstract refinement} \cite{cegar}
 as it was mentioned in the introduction section.
 
 Forester now implements so called height abstraction.
 This abstraction merges states whose languages (note that a language of state is a set of trees) are equal
 when the trees of the languages are compared only to the given depth.
-The main problem of this abstraction technique is low ability of refinement.
+The main problem of this abstraction technique is the low ability of refinement.
 The only way how to refine it is by the parameter defining the depth of tree comparison
 what does not ensure that the found spurious error would not be found again.
 The abstraction allowing more fine tuning is so called \emph{predicate abstraction} \cite{artmc}
@@ -501,7 +499,7 @@ Hence we decided to remove the original tree automata module and further support
 \section{Conclusions}
 \label{sec:concl}
 
-The main goals of this thesis were (a) to implement version of Forester tool that uses the VATA library for tree automata representation and manipulation
+The main goals of this work were (a) to implement version of Forester tool that uses the VATA library for tree automata representation and manipulation
 and (b) to extend verification procedure based on forest automata with backward run for detection of the spurious errors found in the analysed program.
 The theory of forest automata, the related theory of tree automata and the verification procedure based on forest automata has been studied to fulfill the two goals.
 The connection of Forester and \vata\ was designed and implemented after the analysis of the both tools.
