@@ -75,8 +75,8 @@
 %--------------------------------------------------------
 
 \Abstract{
-  Forest automata ara one of the formalisms recently used for analysis and verification of programs manipulating dynamic data structures.
-  In the area of shape analysis, there exists a tool Forester basend of forest automata.
+  Forest automata are one of the formalisms recently used for analysis and verification of programs manipulating dynamic data structures.
+  In the area of shape analysis there exists a tool Forester based on forest automata.
   Forest automata are based on tree automata and Forester has its own implementation of tree automata.
   However, there is the VATA library which implements the efficient algorithms for the tree automata manipulation,
   especially the efficient algorithms for the checking inclusion of languages of tree automata what is an operation
@@ -84,7 +84,7 @@
   The first goal of this work is to implement a version of Forester tool that uses the VATA library for tree automata manipulation.
   The second goal of this work is to extend forest automata based verification with backward run that checks whether
   a found error is a spurious or a real one what could be used for refinement of predicate abstraction.
-  The first goal has been already fulfilled and the variant of Forester using the VATA library participated in the competition SV-COMP 2015.
+  The first goal has been already fulfilled and the variant of Forester using the VATA library successfully participated in the competition SV-COMP 2015.
   The part of the second goal is done only partially -- the backward run is already finished and predicate abstraction implementation is
   in progress.
 }
@@ -182,7 +182,7 @@ The error could be spurious because too strong abstraction over FA is used.
 The information gained by backward run could be used for the refinement of \emph{predicate abstraction} (one kind of abstraction over FA)
 to prevent verification procedure from getting the same spurious error again.
 This way of gradual refinement is based on \emph{counterexample-guided abstract refinement} (CEGAR) \cite{cegar}.
-However, Forester does not currenly use the mentioned predicate abstraction but \emph{height abstraction} now %TODO
+However, Forester does not currently use the mentioned predicate abstraction but \emph{height abstraction} now %TODO
 because predicate abstraction needs the backward run to be fully functional.
 Height abstraction is less precise and less flexible compared to predicate abstraction so implementing predicate abstraction
 enables analysis of even more complex data structures like red-black trees.
@@ -342,7 +342,7 @@ This abstraction merges states whose languages (note that a language of state is
 when the trees of the languages are compared only to the given depth.
 The main problem of this abstraction technique is the low ability of refinement.
 The only way how to refine it is by the parameter defining the depth of tree comparison
-what does not ensure that the found spurious error would not be found again.
+what does not ensure that the found spurious error will not be found again.
 The abstraction allowing more fine tuning is so called \emph{predicate abstraction} \cite{artmc}
 that introduces a set of predicates and merges the states in which the same predicates hold.
 When a spurious counterexample is found, then the set of predicates is extended by
@@ -350,7 +350,7 @@ a predicate that prevents reaching the spurious counterexample again
 and the~verification procedure is rerun with the new predicate.
 
 Finding the new predicate and checking spuriousness of an error is done by performing \emph{backward run}.
-A~backward run starts from forest automata modelling a heap with a found error and
+A~backward run starts from the forest automata modelling a heap with a found error and
 reverting gradually each abstract operation over the forest automata
 in~backward order to the (forward) symbolic execution.
 When an automata with an empty language is get by a reverse abstract transformation then the error is spurious.
@@ -363,16 +363,16 @@ that is necessary for some reverse abstract transformers.
 The intersection is a general operation over forest automata,
 not directly related to backward run.
 Although the intersection is one of the basic operations in automata theory,
-it has not yet been implemented and it realization would enrich the whole forest automata theory.
+it has not been implemented yet and its realization would enrich the whole forest automata theory.
 The intersection is sometimes needed to be done during the backward run between a forest automaton from forward run
 and the last forest automaton from backward run.
 The resulting forest automaton is then further used in backward run after an application
 of the corresponding reverse abstract transformer.
 This is illustrated by Figure \ref{fig:bwrun}.
 Consider an oval representing a language $L(X_{k+1})$ which is the language
-of a forest automaton in backward and an abstract transformer $\beta$ such that $\beta(L(M^{\alpha}_{k})) = L(M_{k+1})$.
-The next state in backward run with forest automata language $L(X_{k})$ is
-get by an application of the reverse abstract transformer $\beta^{-1}$ (illustrated by the doted lines) on the intersection
+of a forest automaton in the backward run and an abstract transformer $\beta$ such that $\beta(L(M^{\alpha}_{k})) = L(M_{k+1})$.
+The next state in backward run with forest automata language $L(X_{k})$ is obtained
+by an application of the reverse abstract transformer $\beta^{-1}$ (illustrated by the doted lines) on the intersection
 (represented by the red and the orange area) of language $L(X_{k+1})$ from backward run 
 and language $L(M^{\alpha}_{k+1})$ from state forward run.
 It is not necessary to do the intersection before each reverse abstract transformer application in Forester
@@ -380,24 +380,24 @@ but it is needed for a few of them.
 
 The goal of this work is to implement backward run and predicate abstraction
 for non-hierarchical forest automata.
-It includes design of the reverse operations for abstract transformers over
+It includes a design of the reverse operations for abstract transformers over
 the abstract domain and the application of predicate abstraction on forest automate.
-Moreover, as it was already mentioned the intersection of foster automata is needed in some reverse
+Moreover, as it was already mentioned the intersection of forest automata is needed in some reverse
 operations of backward run.
 So it is also part of this work to design it and implement it.
-As it was said, the realization of intersection is not only useful for backward run but
+As it was said, the realization of the intersection is not only useful for backward run but
 it is nice general contribution to the theory of forest automata.
 
 We mentioned that this work implements either backward run and predicate abstraction only for
 non-hierarchical forest automata.
-The extension of them for hierarchical forest automata is definitely a challenging issue for future work
+Such extension for hierarchical forest automata is definitely a challenging issue for future work
 that will be done next after finishing the implementation of basic predicate abstraction.
 
 \subsection{Evaluation}
 
-The implementation of the backward run has been already finished and evaluate on the SV-COMP benchmark.
-The implementation of backward helps in confirming of the new $6$ real errors in the programs in memory safety category and
-of the new $8$ real errors in heap manipulation category.
+The implementation of the backward run has been already finished and evaluated on the SV-COMP benchmark.
+The implementation of backward run helps in confirmation of the new $6$ real errors in the programs in the memory safety category and
+of the new $8$ real errors in the heap manipulation category.
 Moreover, the $3$ spurious counterexamples were detected in heap manipulation category.
 The test cases with a spurious counterexamples will be further resolved by implementing predicate
 abstraction.
@@ -431,11 +431,11 @@ Forester could analyze all programs in benchmark.
 \section{Forester and VATA}
 \label{sec:forvata}
 
-This section describes how Forester has been refactored to enable employing \vata\ 
+This section describes the extension of the Forester tool to enable employing \vata\ 
 efficient implementation of	tree automata and the operations over them,
 especially checking inclusion of languages of tree automata.
 Forester had its own implementation of tree automata and their operations (in module called TA)
-but it is not as efficient as VATA and it is also less maintainable
+however not as efficient as VATA and it is also less maintainable
 then using a standalone library that implements the state-of-the-art algorithms.
 
 VATA provides two encodings of tree automata -- explicit and semi-symbolic.
@@ -447,11 +447,11 @@ it is currently the only one that supports the most of needed operations over TA
 It is also more efficient than the semi-symbolic encoding for the purposes of Forester because no large alphabets are used during the verification procedure.
 So the advantage of the semi-symbolic encoding would not be fully utilized here.
 
-Forester implementation is currently far from being mature and
+Forester implementation is currently far from maturity and
 high structural dependencies is one of its bottlenecks.
-So the first thing needed to be done is reducing number of dependencies between classes,
+So the first thing, that was done, was the reduction of number of the dependencies between classes,
 especially reduction of dependencies on the existing Forester module implementing tree automata.
-Applying \emph{Law of Demeter} \cite{lod89} to the code manipulating tree automata is one of approaches how to do it. 
+Applying the \emph{Law of Demeter} \cite{lod89} to the code manipulating tree automata is one of approaches how to do it. 
 It practically means that classes using TA explicitly should implement methods providing information about TA instead of providing instance of TA object itself.
 Applying the Law of Demeter reduces knowledge needed about implementation of TA module across the whole project.
 Another way of reducing structural dependencies is making all possible methods and members of TA private (in sense of C++ language \cite{stroustrup13}).
@@ -462,15 +462,15 @@ with the \emph{Iterator} pattern.
 It is used for example when one needs to iterate over all transitions of tree automata or all transitions which
 have the same state as parent.
 
-After refactoring it is possible to apply design pattern \emph{adapter} \cite{gamma95} to create
-an interface between Forester and \vata.
-Applying the adapter design pattern makes possible to include VATA without need of rewriting
+It is possible to apply the design pattern \emph{adapter} \cite{gamma95} to create
+an interface between Forester and \vata after refactoring.
+This makes possible to include VATA without need of rewriting
 Forester to the~names of methods and data members used in VATA.
 It creates also only one place (particularly adapter class) connecting Forester and VATA instead of
 including VATA into many of the Forester classes and so it prevents from creating too strong relation between them.
 
-The main part of the adapter patter is newly implemented class \emph{VATAAdapter} taking a role of Adaptor.
-We decided to used the implementation approach to Adaptor, preferring composition over inheritance.
+The main part of the adapter patter is newly implemented class \emph{VATAAdapter} taking the role of Adaptor.
+We decided to use the implementation approach to Adaptor, preferring composition over inheritance.
 It is more suitable for our purposes since we often needs to rename methods 
 (a name of a method in Forester differs from the name of the semantically same method in VATA)
 or convert a data type of parameter of tree automata operation (e.g. from vector to set). 
@@ -499,13 +499,13 @@ Hence we decided to remove the original tree automata module and further support
 \section{Conclusions}
 \label{sec:concl}
 
-The main goals of this work were (a) to implement version of Forester tool that uses the VATA library for tree automata representation and manipulation
-and (b) to extend verification procedure based on forest automata with backward run for detection of the spurious errors found in the analysed program.
+The main goals of this work were (i) to implement version of Forester tool that uses the VATA library for tree automata representation and manipulation
+and (ii) to extend verification procedure based on forest automata with backward run for detection of the spurious errors found in the analysed program.
 The theory of forest automata, the related theory of tree automata and the verification procedure based on forest automata has been studied to fulfill the two goals.
 The connection of Forester and \vata\ was designed and implemented after the analysis of the both tools.
 Forester had to be refactored for this purposes.
 
-The first goal has been already reached and the version of Forester using the VATA library successfully participated in competition SV-COMP 2015 \cite{www:svcomp}.
+The first goal has been already reached and Forester using the VATA library successfully participated in competition SV-COMP 2015 \cite{www:svcomp}.
 The second goal is partly finished.
 The backward run with needed forest automata intersection for non-hierarchical forest automata has been completed and evaluated on SV-COMP benchmark.
 The implementation of predicate abstraction is currently in progress.
