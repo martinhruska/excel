@@ -308,7 +308,7 @@ More technical details about a heap decomposition and forest automata could be f
 		One oval consisting green and yellow part represents
 		language of a forest automaton in a symbolic state of symbolic execution.
 		Figure also shows how a forest automaton (and it language) is gradually changed
-		by abstract transformers during symbolic execution what is illustrated by lines connecting ovals.
+		by abstract transformers during a symbolic execution what is illustrated by the lines connecting ovals.
 		A~found error is shown as a red area in the last oval.
 		The backward run starts from this error and it finds
 		that an error is spurious because an intersection (the orange areas) of forest automata language from backward (the blue ovals)
@@ -317,22 +317,21 @@ More technical details about a heap decomposition and forest automata could be f
 \end{figure}
 
 We have already covered how to represent dynamic data structures by forest automata in the previous section.
-Forest automata are also able to handle also infinite state spaces
+Forest automata are able to handle also infinite state spaces
 rising from a possible unboudness of the mentioned dynamic data structures.
 However, there is still the problem of state explosion that often makes
 nearly impossible to finish verification procedure of a system in real time
-and moreover, not even termination of verification procedure is guaranteed at all.
+and moreover, not even termination of the verification procedure is guaranteed at all.
 Therefore the abstraction over the forest automata is introduced to increase probability of termination
 and to accelerate the method.
 The abstraction speeds up the computation by merging more states
 of forest automata to one abstract state.
-But the abstraction also includes the overapproximation of the reachable
+This also causes the overapproximation of the set of reachable
 states of an analyzed system.
-This can lead to reaching the error states in
+It can lead to reaching the error states in
 an abstracted state space which are not present in the real system (the real system is a computer program in this case).
 We can prevent reaching such spurious counterexamples by a refinement of the~abstraction
-what avoids repeating of the abstraction of the states
-that lead to this error.
+what avoids repeating of the abstraction of the states that lead to these errors.
 The application of abstraction over forest (and tree) automata in this work is based on \emph{abstract tree regular model checking} \cite{artmc}
 and the refinement of abstraction is based on \emph{counterexample-guided abstract refinement} \cite{cegar}
 as it was mentioned in the introduction section.
@@ -341,15 +340,15 @@ Forester now implements so called height abstraction.
 This abstraction merges states whose languages (note that a language of state is a set of trees) are equal
 when the trees of the languages are compared only to the given depth.
 The main problem of this abstraction technique is the low ability of refinement.
-The only way how to refine it is by the parameter defining the depth of tree comparison
-what does not ensure that the found spurious error will not be found again.
-The abstraction allowing more fine tuning is so called \emph{predicate abstraction} \cite{artmc}
+The only way of refinement is by the parameter defining the depth of tree comparison
+what does not ensure that a found spurious error will not be found again.
+The~abstraction allowing more fine tuning is so called \emph{predicate abstraction} \cite{artmc}
 that introduces a set of predicates and merges the states in which the same predicates hold.
 When a spurious counterexample is found, then the set of predicates is extended by
 a predicate that prevents reaching the spurious counterexample again
 and the~verification procedure is rerun with the new predicate.
 
-Finding the new predicate and checking spuriousness of an error is done by performing \emph{backward run}.
+Finding the new predicate and checking spuriousness of an error is done by \emph{backward run}.
 A~backward run starts from the forest automata modelling a heap with a found error and
 reverting gradually each abstract operation over the forest automata
 in~backward order to the (forward) symbolic execution.
@@ -364,18 +363,18 @@ The intersection is a general operation over forest automata,
 not directly related to backward run.
 Although the intersection is one of the basic operations in automata theory,
 it has not been implemented yet and its realization would enrich the whole forest automata theory.
-The intersection is sometimes needed to be done during the backward run between a forest automaton from forward run
+The intersection is sometimes needed to be done during a backward run between a forest automaton from forward run
 and the last forest automaton from backward run.
 The resulting forest automaton is then further used in backward run after an application
 of the corresponding reverse abstract transformer.
 This is illustrated by Figure \ref{fig:bwrun}.
 Consider an oval representing a language $L(X_{k+1})$ which is the language
 of a forest automaton in the backward run and an abstract transformer $\beta$ such that $\beta(L(M^{\alpha}_{k})) = L(M_{k+1})$.
-The next state in backward run with forest automata language $L(X_{k})$ is obtained
+The next state in backward run with the forest automaton language $L(X_{k})$ is obtained
 by an application of the reverse abstract transformer $\beta^{-1}$ (illustrated by the doted lines) on the intersection
 (represented by the red and the orange area) of language $L(X_{k+1})$ from backward run 
-and language $L(M^{\alpha}_{k+1})$ from state forward run.
-It is not necessary to do the intersection before each reverse abstract transformer application in Forester
+and language $L(M^{\alpha}_{k+1})$ from forward run.
+It is not necessary to do the intersection before each reverse abstract transformer in Forester
 but it is needed for a few of them.
 
 The goal of this work is to implement backward run and predicate abstraction
@@ -407,7 +406,7 @@ containing implementing alternating singly-linked list or manipulation with mute
 implementing bubble sort over a list implementation from the Linux kernel.
 Note that Forester does not successfully process all programs in the test set
 because it does not currently support all the C language constructions.
-It causes that the improvement in SV-COMP scoring is not as good as it would be when
+It causes that the number of the found errors, spurious or real, is not as high as it would be when
 Forester could analyze all programs in benchmark.
 
 \begin{table}[bu]
@@ -440,7 +439,7 @@ then using a standalone library that implements the state-of-the-art algorithms.
 
 VATA provides two encodings of tree automata -- explicit and semi-symbolic.
 They differ mainly in the way of representation of transition relation of tree automata.
-The explicit encoding stores the transitions in an explicit hash tables while the semi-symbolic
+The explicit encoding stores the transitions in the explicit hash tables while the semi-symbolic
 uses a multi-binary decision diagram.
 We use the implementation of explicit encoding of TA in this work because
 it is currently the only one that supports the most of needed operations over TA.
@@ -449,8 +448,9 @@ So the advantage of the semi-symbolic encoding would not be fully utilized here.
 
 Forester implementation is currently far from maturity and
 high structural dependencies is one of its bottlenecks.
-So the first thing, that was done, was the reduction of number of the dependencies between classes,
-especially reduction of dependencies on the existing Forester module implementing tree automata.
+So the first thing in refactoring was the reduction of number of the dependencies between classes,
+especially reduction of dependencies on the existing Forester module implementing tree automata,
+what makes easier to port Forester to \vata.
 Applying the \emph{Law of Demeter} \cite{lod89} to the code manipulating tree automata is one of approaches how to do it. 
 It practically means that classes using TA explicitly should implement methods providing information about TA instead of providing instance of TA object itself.
 Applying the Law of Demeter reduces knowledge needed about implementation of TA module across the whole project.
@@ -463,14 +463,14 @@ It is used for example when one needs to iterate over all transitions of tree au
 have the same state as parent.
 
 It is possible to apply the design pattern \emph{adapter} \cite{gamma95} to create
-an interface between Forester and \vata after refactoring.
+an interface between Forester and \vata\ after refactoring.
 This makes possible to include VATA without need of rewriting
 Forester to the~names of methods and data members used in VATA.
 It creates also only one place (particularly adapter class) connecting Forester and VATA instead of
-including VATA into many of the Forester classes and so it prevents from creating too strong relation between them.
+including VATA into many of the Forester classes and so it prevents creating too strong relation between them.
 
 The main part of the adapter patter is newly implemented class \emph{VATAAdapter} taking the role of Adaptor.
-We decided to use the implementation approach to Adaptor, preferring composition over inheritance.
+We decided to use the implementation approach to Adaptor preferring composition over inheritance.
 It is more suitable for our purposes since we often needs to rename methods 
 (a name of a method in Forester differs from the name of the semantically same method in VATA)
 or convert a data type of parameter of tree automata operation (e.g. from vector to set). 
@@ -479,18 +479,18 @@ Now we provide more technical details about implementation.
 The class \emph{VATAAdapter} instantiates the class \emph{ExplicitTreeAut} from VATA as its private data member
 and redirects to it method calls from Forester (the names of methods of VATAAdapter are the same as they were
 in the original Forester TA module).
-\emph{VATAAdapter} also sometimes performs mentioned conversion of the data types.
+\emph{VATAAdapter} also sometimes performs the mentioned conversion of the data types.
 There are methods implemented by adapter not presented in VATA like method \emph{unfoldAtRoot}
 performing an unfolding, an operation specific for forest automata.
-The methods of this kind are very Forester specific so it is not sensible to add them to general purpose library as VATA
+The methods of this kind are very Forester specific so it is not sensible to add them to a general purpose library as VATA
 and it is better to implement them in interface like class VATAAdapter.
 
 We originally supposed that it would be possible to keep the original TA module along VATA adapter
 to be able to easily switch between them.
 However it emerged that this would bring high overhead in some situations.
 E.g., a~conversion of some data types would be needed in this case
-what is overhead compared to implementation where data types compatible with VATA are used directly in the Forester code.
-Hence we decided to remove the original tree automata module and further support only version of Forester with \vata.
+what is overhead compared to the implementation where the data types compatible with VATA are used directly in the Forester code.
+Hence we decided to remove the original tree automata module and further support only the version of Forester with \vata.
 
 %--------------------------------------------------------
 %--------------------------------------------------------
@@ -514,7 +514,7 @@ The future work after finishing the basic predicate abstraction could be general
 what enables Forester to analyze more test cases.
 Forester code needs also to be further refactored and greater support for C language construction should be implemented to make Forester able
 to analyze more real word programs.
-The mentioned work should help Forester to win SV-COMP 2016 competition.
+%The mentioned work should help Forester to win SV-COMP 2016 competition.
 %\textbf{[Highlights of Results]} Particular numbers. Remind the reader that the paper matters.
 %\phony{Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempus fermentum ipsum at venenatis. Curabitur ultricies, mauris eu ullamcorper mattis, ligula purus dapibus mi, vel dapibus odio nulla et ex. Sed viverra cursus mattis. Suspendisse ornare semper condimentum. Interdum et malesuada fames ac ante ipsum.}
 
