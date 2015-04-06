@@ -36,6 +36,7 @@
 
 \usepackage{comment}
 \usepackage{tikz}
+\usepackage{subcaption}
 \usetikzlibrary{calc,matrix,backgrounds,fit,shapes,arrows}
 
 \include{macros}
@@ -78,12 +79,12 @@
   Forest automata are one of the formalisms recently used for analysis and verification of programs manipulating dynamic data structures.
   In the area of shape analysis there exists a tool Forester employing forest automata.
   Forest automata are based on tree automata and Forester has its own implementation of tree automata.
-  However, there is the VATA library which implements the efficient algorithms for the tree automata manipulation,
-  especially the efficient algorithms for the checking inclusion of languages of tree automata what is an operation
-  crucial also for the verification procedure based on forest automata.
+  However, there is the VATA library which implements the~efficient algorithms for the~tree automata manipulation,
+  especially the efficient algorithms for the~checking inclusion of languages of tree automata what is an operation
+  crucial also for the~verification procedure based on forest automata.
   The first goal of this work is to implement a version of Forester tool that uses the VATA library for tree automata manipulation.
   The second goal of this work is to extend forest automata based verification with backward run that checks whether
-  a found error is a spurious or a real one what could be used for refinement of predicate abstraction.
+  a found error is a~spurious or a real one what could be used for refinement of predicate abstraction.
   The first goal has been already fulfilled and the variant of Forester using the VATA library successfully participated in the competition SV-COMP 2015.
   The part of the second goal is done only partially -- the backward run is already finished and predicate abstraction implementation is
   in progress.
@@ -121,7 +122,7 @@ The importance of computers in our everyday life has largely increased over the 
 A~lot of us can only hardly imagine doing their jobs without help of an appropriate computer program
 and we also spend a plenty of time using computers (e.g. personal computers or mobile devices) in leisure time.
 The~computer programs are also often used in very critical instances like autopilot in an airplane.
-But the growing number of applications of computer programs brings also the need for their greater safety and security.
+But the growing number of applications of computer programs brings also the~need for their greater safety and security.
 
 However, a guarantee of software safety and correctness is not an easy task
 because the programs often go through many states during the computation
@@ -138,8 +139,8 @@ The mentioned weakness of testing can be resolved by \emph{formal verification}
 which is another approach to checking the program correctness.
 Formal verification is the method for checking whether a given system meets a given specification \cite{fav:lecture}.
 There are three main branches of formal verification.
-The first one is \emph{model checking} which systematically explores the states of a model (e.g. model of a program) to
-prove that a property holds along the whole model.
+The first one is \emph{model checking} which systematically explores the states of a~model (e.g. model of a program) to
+prove that a~property holds along the whole model.
 The second one is \emph{static analysis} which is done over a source code (or some modification of it) of a system
 without its explicit execution.
 One of the important and very widely used approaches in static analysis is called \emph{abstract interpretation} where the analysis is performed by
@@ -156,24 +157,24 @@ pointers are dereferenced (no invalid dereferences), whether all allocated memor
 during the program execution (no memory leaks) or whether there is not freed pointer without assigned memory (no invalid free).
 There are different approaches to this kind of static analysis with the different advantages.
 For example, the approach based on \emph{separation logic} \cite{seplog,seplog07} provides great scalability of a verification procedure.
-On the other side, the automata based approach, particularly \emph{abstract tree regular model checking} (ATRMC) \cite{artmc}, is
+On the other side, the automata based approach, particularly \emph{abstract regular tree model checking} (ARTMC) \cite{artmc}, is
 superior in its flexibility and generality.
 However, this work is focused on a verification procedure based on a concept of forest automata (FA) which
 combines benefits of the both mentioned approaches.
 
-Forest automata (FA) has been introduce in \cite{forester11,forester12} and they are an extension of finite automata or more precisely extension of finite tree automata (TA).
+Forest automata (FA) has been introduced in \cite{forester11,forester12} and they are an extension of finite automata or more precisely extension of finite tree automata (TA).
 They are used as an abstract domain in related verification procedure over which a symbolic execution of an analyzed program is performed.
-A~prototype of this verification procedure has been implemented in the tool called \emph{Forester}.
+A~prototype of this verification procedure has been implemented in a tool called \emph{Forester}.
 Forester verifies programs written in C~language and it can detect safety violations like invalid dereferences, invalid frees, memory leaks and also reachability of an error label.
 It is yet able to verify non-trivial data structures like skip-lists of the second and the third level
 but there is still a room for its improvement.
 E.g., Forester currently does not support the complete C language syntax and %TODO
 it is not also yet possible to check whether a found error is real or spurious.
-It is also needed to refactore some parts of Forester code before any extension of the tool.
+It is also needed to refactor some parts of Forester code before any extension of the tool.
 A~general goal of this work is to improve Forester in the areas described further.
 
 Since FA are highly related to the finite tree automata the first of the goals of the work is to change
-the underlying implementation of finite tree automata in Forester to \vata\ -- state-of-the-art library for TA manipulation \cite{libvata}.
+the underlying implementation of finite tree automata in Forester to \vata\ -- a state-of-the-art library for TA manipulation \cite{libvata}.
 Particularly, this consists creating an interface between Forester and VATA to employ VATA as a TA library for Forester backend
 which should bring better maintainability and modularity than having a special TA library implementation within Forester as it is now.
 The second goal of this work is to design and implement \emph{backward run} for FA based verification
@@ -181,7 +182,7 @@ which enables checking spuriousness of an error found in a program.
 The error could be spurious because too strong abstraction over FA is used.
 The information gained by backward run could be used for the refinement of \emph{predicate abstraction} (one kind of abstraction over FA)
 to prevent verification procedure from getting the same spurious error again.
-This way of gradual refinement is based on \emph{counterexample-guided abstract refinement} (CEGAR) \cite{cegar}.
+This way of gradual refinement is based on \emph{counterexample-guided abstraction refinement} (CEGAR) \cite{cegar}.
 However, Forester does not currently use the mentioned predicate abstraction but \emph{height abstraction} %TODO
 because predicate abstraction needs backward run to be fully functional.
 Height abstraction is less precise and less flexible compared to predicate abstraction so implementing predicate abstraction
@@ -202,26 +203,40 @@ Finally, conclusions of the work is given in Section \ref{sec:concl}.
 \section{Overview of Verification Method}
 \label{sec:overview}
 
-\begin{figure}[t]
+\begingroup
+\tikzset{every picture/.style={scale=1}}%
+\begin{figure*}[t]
 	\centering
-	\input{images/sll.tikz}
-	
+	\begin{subfigure}{0.5\textwidth}
+	\centering
+		\input {images/sll.tikz}
+		\vspace{0.7cm}
+		\caption{A~heap graph}
+		\label{subfig:graph}
+	\end{subfigure}%
+	~
+	\hspace{0.5cm}
+	\begin{subfigure}{0.5\textwidth}
+	\centering
+		\input{images/sll_d.tikz}
+		\caption{A~tree decomposition of the left heap graph}
+		\label{subfig:trees}
+	\end{subfigure}%
 	\vspace{0.5cm}
-	
-	\input{images/sll_d.tikz}
 	\caption{
 	Figure shows tree decomposition of a heap graph.
-    The heap graph representing singly-linked list is shown in the top of Figure.
+	The heap graph representing singly-linked list is shown in Figure \ref{subfig:graph}.
 	The nodes could be labeled by a pointer variable that references allocated memory cell
 	corresponding to the node.
 	Moreover the~cut-points are labeled by an order number that they have in an ordering over
 	the cut-points.
 	In this case there are three cut-points with an order number $1$, $2$ and $3$.
-	The graph is split to the three trees shown in the bottom of Figure by the heap decomposition.
+	The graph is split to the three trees shown in Figure \ref{subfig:trees} by the heap decomposition.
 	The~new trees could contain the references to another trees, in this case tree $1$ and tree $3$
 	have the nodes referencing tree $2$.}
 	\label{fig:graph}
-\end{figure}
+\end{figure*}
+\endgroup
 
 This section provides a high level overview of the verification procedure based
 on forest automata.
@@ -240,8 +255,8 @@ The example of such a graph is shown in~Figure~\ref{fig:graph}.
 We omit the data nodes in Figure \ref{fig:graph} for sake of clarity.
 The figure shows that the variables $x$, $y$ points two singly-linked list (the blue and the red nodes) that
 have common part (the green nodes).
-The original heap graph is shown in the top of Figure \ref{fig:graph}.
-The tree decomposition, which is described later, is in the bottom of Figure \ref{fig:graph}.
+The original heap graph is shown in Figure~\ref{subfig:graph}.
+The tree decomposition, which is described later, is in Figure~\ref{subfig:trees}.
 
 We can decompose the graph to a set of trees by the following method \cite{forester11}.
 First we identify so called \emph{cut-points} \,---\, the nodes referenced by
@@ -253,10 +268,10 @@ The graph at Figure \ref{fig:graph} has the three cut-points that are labeled by
 $2$ and $3$ what denotes the node order in the cut-points ordering.
 Then the graph is split to the trees with cut-point as the roots.
 The new trees do not contain any cut-points.
-The~graph at top of Figure \ref{fig:graph} is decomposed to the three trees that are shown at the bottom of the figure.
+The~graph at Figure~\ref{subfig:graph} is decomposed to the three trees that are shown at the bottom of the figure.
 Finally, we redirect the edges leading to the nodes marked as the cut-points to the new nodes because the cut-points are now roots of the trees.
 The new nodes replacing the cut-points are labeled by a number referencing to the tree that has a related cut-point like a root.
-The example at Figure~\ref{fig:graph} shows that tree $1$ and tree $3$ contains the nodes with the label $\overline{2}$
+The example at Figure~\ref{subfig:trees} shows that tree $1$ and tree $3$ contains the nodes with the label $\overline{2}$
 referencing tree~$2$.
 
 The tuple of trees (created by graph decomposition) is called forest.
@@ -332,8 +347,8 @@ It can lead to reaching the error states in
 an abstracted state space which are not present in the real system (the real system is a computer program in this case).
 We can prevent reaching such spurious counterexamples by a refinement of the~abstraction
 what avoids repeating of the abstraction of the states that lead to these errors.
-The application of an abstraction over forest (and tree) automata in this work is based on \emph{abstract tree regular model checking} \cite{artmc}
-and the refinement of the abstraction is based on \emph{counterexample-guided abstract refinement} \cite{cegar}
+The application of an abstraction over forest (and tree) automata in this work is based on \emph{abstract regular tree model checking} \cite{artmc}
+and the refinement of the abstraction is based on \emph{counterexample-guided abstraction refinement} \cite{cegar}
 as it was mentioned in the introduction section.
 
 Forester now implements so called height abstraction.
@@ -454,7 +469,7 @@ what makes easier to port Forester to \vata.
 Applying the \emph{Law of Demeter} \cite{lod89} to the code manipulating tree automata is one of approaches how to do it. 
 It practically means that classes using TA explicitly should implement methods providing information about TA instead of providing instance of TA object itself.
 Applying the Law of Demeter reduces knowledge needed about implementation of TA module across the whole project.
-Another way of reducing structural dependencies is making all possible methods and members of TA private (in sense of C++ language \cite{stroustrup13}).
+Another way of reducing structural dependencies is making all possible methods and members of TA private (in sense of C++ language~\cite{stroustrup13}).
 This creates an explicit tight interface to tree automata module so it is easier to see which methods needs to implement
 a new tree automata implementation.
 The last from the most used techniques of refactoring in this work is employing \emph{auto} type deduction in C++ in combination
