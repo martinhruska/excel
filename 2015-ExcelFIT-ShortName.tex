@@ -173,7 +173,7 @@ it is not also yet possible to check whether a found error is real or spurious.
 It is also needed to refactor some parts of Forester code before any extension of the tool.
 A~general goal of this work is to improve Forester in the areas described further.
 
-Since FA are highly related to the finite tree automata the first of the goals of the work is to change
+Since FA are highly related to the finite tree automata the first goal of this work is to change
 the underlying implementation of finite tree automata in Forester to \vata\ -- a state-of-the-art library for TA manipulation \cite{libvata}.
 Particularly, this consists creating an interface between Forester and VATA to employ VATA as a TA library for Forester backend
 which should bring better maintainability and modularity than having a special TA library implementation within Forester as it is now.
@@ -210,7 +210,7 @@ Finally, conclusions of the work is given in Section \ref{sec:concl}.
 	\begin{subfigure}{0.5\textwidth}
 	\centering
 		\input {images/sll.tikz}
-		\vspace{0.7cm}
+		\vspace{0.55cm}
 		\caption{A~heap graph}
 		\label{subfig:graph}
 	\end{subfigure}%
@@ -219,7 +219,7 @@ Finally, conclusions of the work is given in Section \ref{sec:concl}.
 	\begin{subfigure}{0.5\textwidth}
 	\centering
 		\input{images/sll_d.tikz}
-		\caption{A~tree decomposition of the left heap graph}
+		\caption{A~tree decomposition of the heap graph}
 		\label{subfig:trees}
 	\end{subfigure}%
 	\vspace{0.5cm}
@@ -364,11 +364,11 @@ a predicate that prevents reaching the spurious counterexample again
 and the~verification procedure is rerun with the new predicate.
 
 Finding the new predicate and checking spuriousness of an error is done by \emph{backward run}.
-A~backward run starts from the forest automata modelling a heap with a found error and
+A~backward run starts from the forest automata modelling a~heap with a found error and
 reverting gradually each abstract operation over the forest automata
 in~backward order to the (forward) symbolic execution.
 When an automata with an empty language is get by a reverse abstract transformation then the error is spurious.
-The last automaton of backward run with a non empty language is then used as a new predicate.
+The~last automaton of backward run with a non empty language is then used as a new predicate.
 Backward run is illustrated by Figure \ref{fig:bwrun} and the illustration
 is further described in the caption of the figure.
 
@@ -379,10 +379,10 @@ not directly related to backward run.
 Although the intersection is one of the basic operations in automata theory,
 it has not been implemented yet and its realization would enrich the whole forest automata theory.
 The intersection is sometimes needed to be done during a backward run between a forest automaton from forward run
-and the last forest automaton from backward run.
-The resulting forest automaton is then further used in backward run after an application
+and the~last forest automaton from backward run.
+The~resulting forest automaton is then further used in backward run after an application
 of the corresponding reverse abstract transformer.
-This is illustrated by Figure \ref{fig:bwrun}.
+This is illustrated by Figure~\ref{fig:bwrun}.
 Consider an oval representing the language $L(X_{k+1})$ which is the language
 of a forest automaton in the backward run and an abstract transformer $\beta$ such that $\beta(L(M^{\alpha}_{k})) = L(M_{k+1})$.
 The next state in backward run with the forest automaton language $L(X_{k})$ is obtained
@@ -455,7 +455,7 @@ then using a standalone library that implements the state-of-the-art algorithms.
 VATA provides two encodings of tree automata -- explicit and semi-symbolic.
 They differ mainly in the way of representation of transition relation of tree automata.
 The explicit encoding stores the transitions in the explicit hash tables while the semi-symbolic
-uses a multi-binary decision diagram.
+uses a~multi-binary decision diagram.
 We use the implementation of explicit encoding of TA in this work because
 it is currently the only one that supports the most of needed operations over TA.
 It is also more efficient than the semi-symbolic encoding for the purposes of Forester because no large alphabets are used during the verification procedure.
@@ -498,7 +498,7 @@ in the original Forester TA module).
 There are methods implemented by adapter not presented in VATA like method \emph{unfoldAtRoot}
 performing an unfolding, an operation specific for forest automata.
 The methods of this kind are very Forester specific so it is not sensible to add them to a general purpose library as VATA
-and it is better to implement them in interface like class VATAAdapter.
+and it is better to implement them in an interface class like VATAAdapter.
 
 We originally supposed that it would be possible to keep the original TA module along VATA adapter
 to be able to easily switch between them.
@@ -528,7 +528,7 @@ The implementation of predicate abstraction is currently in progress.
 The future work after finishing basic predicate abstraction could be generalizing predicate abstraction and backward run to the hierarchical forest automata
 what enables Forester to analyze more test cases.
 Forester code needs also to be further refactored and greater support for C language construction should be implemented to make Forester able
-to analyze more real word programs.
+to analyze more comlpex programs.
 %The mentioned work should help Forester to win SV-COMP 2016 competition.
 %\textbf{[Highlights of Results]} Particular numbers. Remind the reader that the paper matters.
 %\phony{Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempus fermentum ipsum at venenatis. Curabitur ultricies, mauris eu ullamcorper mattis, ligula purus dapibus mi, vel dapibus odio nulla et ex. Sed viverra cursus mattis. Suspendisse ornare semper condimentum. Interdum et malesuada fames ac ante ipsum.}
