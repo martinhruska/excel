@@ -162,7 +162,8 @@ superior in its flexibility and generality.
 However, this work focuses on the verification procedure based on the concept of forest automata (FA) which
 combines benefits of the both mentioned approaches.
 
-Forest automata (FA) have been introduced in \cite{forester11,forester12} and they are an extension of finite automata or more precisely extension of finite tree automata (TA).
+Forest automata (FA) have been introduced in \cite{forester11,forester12} and
+they are an extension of finite automata or more precisely extension of finite tree automata (TA).
 They are used as an abstract domain in related verification procedure over which a symbolic execution of an analyzed program is performed.
 A~prototype of this verification procedure has been implemented in a tool called \emph{Forester} \cite{www:forester}.
 Forester verifies programs written in C~language and it detects safety violations like invalid dereferences, invalid frees,
@@ -193,7 +194,8 @@ A~part of the second goal is an implementation of predicate abstraction using ba
 This paper is structured as follows.
 In Section \ref{sec:overview}, a high level overview of shape analysis based on forest automata
 is given.
-Then the closer description of backward run and predicate abstraction takes a place in Section \ref{sec:br}.
+Then the closer description of backward run and predicate abstraction takes a place in Section \ref{sec:br}
+immediately after the overview section to continue in the verification technique description.
 Section \ref{sec:forvata} provides description of modification of Forester to use the VATA library as a backend.
 Finally, conclusions of the work is given in Section \ref{sec:concl}.
 
@@ -263,8 +265,8 @@ We can decompose the graph to a set of trees by the following method \cite{fores
 First we identify so called \emph{cut-points} \,---\, the nodes referenced by
 one or more pointer variables or the nodes having more than one incoming edges.
 The cut-points are then numbered by a depth-first traversal of the graph starting from
-the nodes referenced by the pointer variables.
-Indeed, the traversal and the numbering defines an ordering over the cut-points.
+the nodes referenced by the variables.
+The traversal and the numbering defines an ordering over the cut-points.
 %The graph at Figure \ref{fig:graph} has the three cut-points that are labeled by the numbers $1$,
 %$2$ and $3$ what denotes the node order in the cut-points ordering.
 Then the graph is split to the trees with cut-point as the roots.
@@ -525,7 +527,8 @@ Hence we decided to remove the original tree automata module and further support
 
 The main goals of this work were (i) to implement version of Forester tool that uses the VATA library for tree automata representation and manipulation
 and (ii) to extend verification procedure based on forest automata with backward run for detection of the spurious errors found in the analysed program.
-The theory of forest automata, the related theory of tree automata and the verification procedure based on forest automata has been studied to fulfill the two goals.
+The theory of forest automata, the related theory of tree automata and
+the verification procedure based on forest automata has been studied to fulfill the two goals.
 The connection of Forester and \vata\ was designed and implemented after the analysis of the both tools.
 Forester had to be refactored for this purposes.
 
