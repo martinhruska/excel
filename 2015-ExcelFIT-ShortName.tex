@@ -422,7 +422,7 @@ The test cases with the~spurious counterexamples will be further resolved by imp
 abstraction.
 The results are summarized in Table \ref{tab:bwres}.
 The analyzed programs in SV-COMP benchmark includes e.g., programs from LDV (Linux Drivers Verification) project
-containing implemention of alternating singly-linked list or manipulation with mutex locks, or the programs
+containing implementation of alternating singly-linked list or manipulation with mutex locks, or the programs
 implementing bubble sort over a list implementation from the Linux kernel.
 Note that Forester does not successfully process all the programs in the test set
 because it does not currently support all the C language constructions.
@@ -479,7 +479,7 @@ Another way of reducing structural dependencies is making all possible methods a
 This creates an explicit tight interface to tree automata module so it is easier to see which methods needs to implement
 a new tree automata implementation.
 The last from the biggest changes in this work is using generic programming.
-It should make possible to make operations over tree automata without dependending on a concrete implementation.
+It should make possible to make operations over tree automata without depending on a concrete implementation.
 In this case it is done by refactoring employing \emph{auto} type deduction in C++ in combination
 with the \emph{Iterator} pattern.
 It is used for example when one needs to iterate over all transitions of tree automata or all transitions which
@@ -493,7 +493,7 @@ Forester to the~names of methods and data members used in VATA.
 It creates also only one place (particularly adapter class) connecting Forester and VATA instead of
 including VATA into many of the Forester classes and so it prevents creating too strong relation between them.
 
-The main part of the adapter patter is newly implemented class \emph{VATAAdapter} taking the role of Adaptor.
+The main part of the adapter patter is newly implemented class \emph{Adapter} taking the role of Adaptor.
 We decided to use the implementation approach to Adaptor preferring composition over inheritance.
 It is more suitable for our purposes since we often needs to rename methods 
 (a name of a method in Forester differs from the name of the semantically same method in VATA)
