@@ -148,7 +148,7 @@ applying abstract transformers corresponding to the original program semantics o
 The last approach is \emph{theorem proving}.
 It proves the program in a standard mathematical way -- starting from axioms and proving theorems to
 verify the properties of a given system.
-Theorem proving could be partially automated.
+Theorem proving ca be partially automated.
 
 This work deals with a specific part of static analysis called \emph{shape analysis} which is focused on the verification of the programs manipulating
 complex data structures (like the different kinds of lists and trees), typically allocated on the heap.
@@ -159,14 +159,15 @@ There are different approaches to this kind of static analysis with the differen
 For example, the approach based on \emph{separation logic} \cite{seplog,seplog07} provides great scalability of a verification procedure.
 On the other side, the automata based approach, particularly \emph{abstract regular tree model checking} (ARTMC) \cite{artmc}, is
 superior in its flexibility and generality.
-However, this work is focused on a verification procedure based on a concept of forest automata (FA) which
+However, this work focuses on the verification procedure based on the concept of forest automata (FA) which
 combines benefits of the both mentioned approaches.
 
-Forest automata (FA) has been introduced in \cite{forester11,forester12} and they are an extension of finite automata or more precisely extension of finite tree automata (TA).
+Forest automata (FA) have been introduced in \cite{forester11,forester12} and they are an extension of finite automata or more precisely extension of finite tree automata (TA).
 They are used as an abstract domain in related verification procedure over which a symbolic execution of an analyzed program is performed.
-A~prototype of this verification procedure has been implemented in a tool called \emph{Forester}.
-Forester verifies programs written in C~language and it can detect safety violations like invalid dereferences, invalid frees, memory leaks and also reachability of an error label.
-It is yet able to verify non-trivial data structures like skip-lists of the second and the third level
+A~prototype of this verification procedure has been implemented in a tool called \emph{Forester} \cite{www:forester}.
+Forester verifies programs written in C~language and it detects safety violations like invalid dereferences, invalid frees,
+memory leaks and also reachability of an error program location.
+It is yet able to verify non-trivial data structures like skip-lists of the~second and the~third level
 but there is still a room for its improvement.
 E.g., Forester currently does not support the complete C language syntax and %TODO
 it is not also yet possible to check whether a found error is real or spurious.
@@ -190,7 +191,7 @@ enables analysis of even more complex data structures like red-black trees.
 A~part of the second goal is an implementation of predicate abstraction using backward run in Forester.
 
 This paper is structured as follows.
-In Section \ref{sec:overview} a high level overview of shape analysis based on forest automata
+In Section \ref{sec:overview}, a high level overview of shape analysis based on forest automata
 is given.
 Then the closer description of backward run and predicate abstraction takes a place in Section \ref{sec:br}.
 Section \ref{sec:forvata} provides description of modification of Forester to use the VATA library as a backend.
@@ -228,10 +229,10 @@ Finally, conclusions of the work is given in Section \ref{sec:concl}.
 	The heap graph representing singly-linked list is shown in Figure \ref{subfig:graph}.
 	The nodes could be labeled by a pointer variable that references allocated memory cell
 	corresponding to the node.
-	Moreover the~cut-points are labeled by an order number that they have in an ordering over
+	Moreover, the~cut-points are labeled by an order number that they have in an ordering over
 	the cut-points.
-	In this case there are three cut-points with an order number $1$, $2$ and $3$.
-	The graph is split to the three trees shown in Figure \ref{subfig:trees} by the heap decomposition.
+	In this case, there are three cut-points with an order number $1$, $2$ and $3$.
+	The graph is split to three trees shown in Figure \ref{subfig:trees} by the heap decomposition.
 	The~new trees could contain the references to another trees, in this case tree $1$ and tree $3$
 	have the nodes referencing tree $2$.}
 	\label{fig:graph}
@@ -244,7 +245,7 @@ As it was already mentioned we consider only C programs manipulating dynamic dat
 The simple examples of such structures are singly-linked lists or binary trees.
 Consider a singly-linked list containing an (integer) data member and a pointer
 to the next item in the list and also
-consider two variables $x,y$ pointing the singly-linked list.
+consider two variables $x$ and $y$ pointing the singly-linked list.
 An instance of the singly-linked list allocated on a heap can be viewed as an oriented graph.
 The nodes of the graph correspond to the allocated memory cells
 and the edges of the graph are related to the pointers referencing
@@ -264,18 +265,18 @@ one or more pointer variables or the nodes having more than one incoming edges.
 The cut-points are then numbered by a depth-first traversal of the graph starting from
 the nodes referenced by the pointer variables.
 Indeed, the traversal and the numbering defines an ordering over the cut-points.
-The graph at Figure \ref{fig:graph} has the three cut-points that are labeled by the numbers $1$,
-$2$ and $3$ what denotes the node order in the cut-points ordering.
+%The graph at Figure \ref{fig:graph} has the three cut-points that are labeled by the numbers $1$,
+%$2$ and $3$ what denotes the node order in the cut-points ordering.
 Then the graph is split to the trees with cut-point as the roots.
-The new trees do not contain any cut-points.
-The~graph at Figure~\ref{subfig:graph} is decomposed to the three trees that are shown at the bottom of the figure.
+%The new trees do not contain any cut-points.
+%The~graph at Figure~\ref{subfig:graph} is decomposed to the three trees that are shown at the bottom of the figure.
 Finally, we redirect the edges leading to the nodes marked as the cut-points to the new nodes because the cut-points are now roots of the trees.
-The new nodes replacing the cut-points are labeled by a number referencing to the tree that has a related cut-point like a root.
-The example at Figure~\ref{subfig:trees} shows that tree $1$ and tree $3$ contains the nodes with the label $\overline{2}$
-referencing tree~$2$.
+%The new nodes replacing the cut-points are labeled by a number referencing to the tree that has a related cut-point like a root.
+%The example at Figure~\ref{subfig:trees} shows that tree $1$ and tree $3$ contains the nodes with the label $\overline{2}$
+%referencing tree~$2$.
 
 The tuple of trees (created by graph decomposition) is called forest.
-Such a forest could be accepted by a forest automaton as a member of its language.
+Such a forest is accepted by a forest automaton as a member of its language.
 A~forest automaton is a tuple of finite tree automata which are automata accepting trees instead of words (in comparison with finite automata).
 The tree automata within a forest automaton are interconnected by references (that are also symbols in their alphabet).
 Each of the tree automata accepts a set of trees and so we get a language of a forest
@@ -307,7 +308,7 @@ We get hierarchical forest automata this way because forest automata of lower le
 are included as symbols in alphabets of forest automata of higher level.
 Note that a forest automaton of certain level can contain in its alphabet only automata of lower level than its own level.
 
-More technical details about a heap decomposition and forest automata could be found in \cite{forester11, forester13}.
+More technical details about a heap decomposition and forest automata can be found in \cite{forester11, forester13}.
 
 \section{Backward Run and Predicate Abstraction}
 \label{sec:br}
@@ -378,6 +379,7 @@ The intersection is a general operation over forest automata,
 not directly related to backward run.
 Although the intersection is one of the basic operations in automata theory,
 it has not been implemented yet and its realization would enrich the whole forest automata theory.
+\begin{comment}
 The intersection is sometimes needed to be done during a backward run between a forest automaton from forward run
 and the~last forest automaton from backward run.
 The~resulting forest automaton is then further used in backward run after an application
@@ -391,8 +393,9 @@ by an application of the reverse abstract transformer $\beta^{-1}$ (illustrated 
 and the language $L(M^{\alpha}_{k+1})$ from forward run.
 It is not necessary to do the intersection before each reverse abstract transformer in Forester
 but it is needed for a few of them.
+\end{comment}
 
-The goal of this work is to implement backward run and predicate abstraction
+We focuses on implementation backward run and predicate abstraction
 for non-hierarchical forest automata.
 It includes a design of the reverse operations for abstract transformers over
 the abstract domain and the application of predicate abstraction on forest automata.
@@ -402,10 +405,12 @@ So it is also part of this work to design it and to implement it.
 As it was said, the realization of the intersection is not only useful for backward run but
 it is nice general contribution to the theory of forest automata.
 
+\begin{comment}
 We mentioned that this work implements either backward run and predicate abstraction only for
 non-hierarchical forest automata.
 Such extension for hierarchical forest automata is definitely a challenging issue for future work
 that will be done next after finishing the implementation of basic predicate abstraction.
+\end{comment}
 
 \subsection{Evaluation}
 
@@ -417,7 +422,7 @@ The test cases with the~spurious counterexamples will be further resolved by imp
 abstraction.
 The results are summarized in Table \ref{tab:bwres}.
 The analyzed programs in SV-COMP benchmark includes e.g., programs from LDV (Linux Drivers Verification) project
-containing implementing alternating singly-linked list or manipulation with mutex locks, or the programs
+containing implemention of alternating singly-linked list or manipulation with mutex locks, or the programs
 implementing bubble sort over a list implementation from the Linux kernel.
 Note that Forester does not successfully process all the programs in the test set
 because it does not currently support all the C language constructions.
@@ -426,9 +431,10 @@ Forester could analyze all the programs in the benchmark.
 
 \begin{table}[bu]
 	\vskip6pt
-	\caption{SV-COMP Benchmark Evaluation. Table shows the number of errors confirmed
-	to be real and the number of errors determined as spurious by backward run.
-	The two categories of SV-COMP Benchmark are used for this evaluation -- Heap Manipulation and Memory Safety.}
+	\caption{SV-COMP Benchmark Evaluation of Backward Run.%Table shows the number of errors confirmed
+	%to be real and the number of errors determined as spurious by backward run.
+	%The two categories of SV-COMP Benchmark are used for this evaluation -- Heap Manipulation and Memory Safety.
+	}
 	\centering
 	\begin{tabular}{llr}
 		\toprule
@@ -467,15 +473,18 @@ So the first thing in refactoring was the reduction of number of the dependencie
 especially reduction of the dependencies on the existing Forester module implementing tree automata,
 what makes easier to port Forester to \vata.
 Applying the \emph{Law of Demeter} \cite{lod89} to the code manipulating tree automata is one of approaches how to do it. 
-It practically means that classes using TA explicitly should implement methods providing information about TA instead of providing instance of TA object itself.
+It practically means that classes using TA should explicitly implement methods providing information about TA instead of providing instance of TA object itself.
 Applying the Law of Demeter reduces knowledge needed about implementation of TA module across the whole project.
 Another way of reducing structural dependencies is making all possible methods and members of TA private (in sense of C++ language~\cite{stroustrup13}).
 This creates an explicit tight interface to tree automata module so it is easier to see which methods needs to implement
 a new tree automata implementation.
-The last from the most used techniques of refactoring in this work is employing \emph{auto} type deduction in C++ in combination
+The last from the biggest changes in this work is using generic programming.
+It should make possible to make operations over tree automata without dependending on a concrete implementation.
+In this case it is done by refactoring employing \emph{auto} type deduction in C++ in combination
 with the \emph{Iterator} pattern.
 It is used for example when one needs to iterate over all transitions of tree automata or all transitions which
-have the same state as parent.
+have the same state as parent and performs a operation with the transitions.
+This last change employs principles of generic programming where
 
 It is possible to apply the design pattern \emph{adapter} \cite{gamma95} to create
 an interface between Forester and \vata\ after refactoring.
@@ -528,7 +537,7 @@ The implementation of predicate abstraction is currently in progress.
 The future work after finishing basic predicate abstraction could be generalizing predicate abstraction and backward run to the hierarchical forest automata
 what enables Forester to analyze more test cases.
 Forester code needs also to be further refactored and greater support for C language construction should be implemented to make Forester able
-to analyze more comlpex programs.
+to analyze more complex programs.
 %The mentioned work should help Forester to win SV-COMP 2016 competition.
 %\textbf{[Highlights of Results]} Particular numbers. Remind the reader that the paper matters.
 %\phony{Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempus fermentum ipsum at venenatis. Curabitur ultricies, mauris eu ullamcorper mattis, ligula purus dapibus mi, vel dapibus odio nulla et ex. Sed viverra cursus mattis. Suspendisse ornare semper condimentum. Interdum et malesuada fames ac ante ipsum.}
