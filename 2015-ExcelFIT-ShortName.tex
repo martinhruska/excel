@@ -76,18 +76,16 @@
 %--------------------------------------------------------
 
 \Abstract{
-  Forest automata are one of the formalisms recently used for analysis and verification of programs manipulating dynamic data structures.
-  In the area of shape analysis there exists a tool Forester employing forest automata.
-  Forest automata are based on tree automata and Forester has its own implementation of tree automata.
-  However, there is the VATA library which implements the~efficient algorithms for the~tree automata manipulation,
-  especially the efficient algorithms for the~checking inclusion of languages of tree automata what is an operation
-  crucial also for the~verification procedure based on forest automata.
-  The first goal of this work is to implement a version of Forester tool that uses the VATA library for tree automata manipulation.
-  The second goal of this work is to extend forest automata based verification with backward run that checks whether
+  In this work, we develop an existing method for shape analysis based on so called forest automata,
+  and we also improve its implementation, the tool Forester.
+  Forest automata are based on tree automata and Forester includes a simple implementation of tree automata.
+  Our first contribution is replacing this implementation by a general purpose tree automata library VATA,
+  which contians highly optimized implementations of the used automata operations.
+  The version of Forester using the VATA library participated in the competition SV-COMP 2015.
+  Secondly, we have extended the forest automata based verification method with a counterexample analysis.
+  The results of the counterexample analysis can be then used to check whether
   a found error is a~spurious or a real one what could be used for refinement of predicate abstraction.
-  The first goal has been already fulfilled and the variant of Forester using the VATA library successfully participated in the competition SV-COMP 2015.
-  The part of the second goal is done only partially -- the backward run is already finished and predicate abstraction implementation is
-  in progress.
+  We are currently working on its application in counterexample based abstraction refinement.
 }
 
 %\Teaser{
@@ -119,63 +117,62 @@
 \section{Introduction}
 
 The importance of computers in our everyday life has largely increased over the past few decades.
-A~lot of us can only hardly imagine doing their jobs without help of an appropriate computer program
+A~lot of us can only hardly imagine doing their jobs without a help of an appropriate computer program
 and we also spend a plenty of time using computers (e.g. personal computers or mobile devices) in leisure time.
 The~computer programs are also often used in very critical instances like autopilot in an airplane.
 But the growing number of applications of computer programs brings also the~need for their greater safety and security.
 
-However, a guarantee of software safety and correctness is not an easy task
+However, a guarantee of software correctness is not an easy task
 because the programs often go through many states during the computation
 and it could be very time and space consuming or even impossible to check whether no undesirable behavior
-happens in any of those states.
-One of the approaches to ensure the software quality is \emph{testing} (and dynamic analysis) which is basically based
-on running a program in the different contexts and with the different inputs
+may appear in any of those states.
+One of the approaches to ensure the software quality is \emph{testing} (and dynamic analysis) which is based
+on running the program, in the different contexts, with the different inputs
 and matching a program behavior and the outputs with the expected ones.
-This method can satisfy many of the requirements for the software quality and often cover the great space of the program behaviors
-but on the~other side it is only possible to prove presence of the~errors using testing not their absence \cite{dijkstra}.
+This method can satisfy many of the requirements for the software quality and often covers the great space of the program behaviors.
+On the~other side, it is only possible to prove presence of the~errors using testing not their absence \cite{dijkstra}.
 Moreover finding some errors during testing does not mean that all errors are eliminated.
 
-The mentioned weakness of testing can be resolved by \emph{formal verification}
-which is another approach to checking the program correctness.
-Formal verification is the method for checking whether a given system meets a given specification \cite{fav:lecture}.
+The mentioned weakness of testing can be resolved by \emph{formal verification}.
+Formal verification aims at using rigorous mathematical methods to check whehther a given system meets a given specification \cite{fav:lecture}.
 There are three main branches of formal verification.
 The first one is \emph{model checking} which systematically explores the states of a~model (e.g. model of a program) to
-prove that a~property holds along the whole model.
+prove that the model satisfies the property.
 The second one is \emph{static analysis} which is done over a source code (or some modification of it) of a system
-without its explicit execution.
+without a need of its execution.
 One of the important and very widely used approaches in static analysis is called \emph{abstract interpretation} where the analysis is performed by
 applying abstract transformers corresponding to the original program semantics over an abstract domain.
 The last approach is \emph{theorem proving}.
-It proves the program in a standard mathematical way -- starting from axioms and proving theorems to
+It proves the program safe in a standard mathematical way -- starting from axioms and using inference rules to
 verify the properties of a given system.
 Theorem proving ca be partially automated.
 
-This work deals with a specific part of static analysis called \emph{shape analysis} which is focused on the verification of the programs manipulating
+This work deals with a specific part of static analysis called \emph{shape analysis} which is focused on the verification of programs manipulating
 complex data structures (like the different kinds of lists and trees), typically allocated on the heap.
-The properties checked for this class of programs are for example checking whether no dangling
+The properties checked are for example checking whether no dangling
 pointers are dereferenced (no invalid dereferences), whether all allocated memory on a heap is also freed
 during the program execution (no memory leaks) or whether there is not freed pointer without assigned memory (no invalid free).
 There are different approaches to this kind of static analysis with the different advantages.
 For example, the approach based on \emph{separation logic} \cite{seplog,seplog07} provides great scalability of a verification procedure.
 On the other side, the automata based approach, particularly \emph{abstract regular tree model checking} (ARTMC) \cite{artmc}, is
 superior in its flexibility and generality.
-However, this work focuses on the verification procedure based on the concept of forest automata (FA) which
+This work focuses on the verification procedure based on the concept of forest automata (FA) which
 combines benefits of the both mentioned approaches.
 
-Forest automata (FA) have been introduced in \cite{forester11,forester12} and
-they are an extension of finite automata or more precisely extension of finite tree automata (TA).
-They are used as an abstract domain in related verification procedure over which a symbolic execution of an analyzed program is performed.
+Forest automata (FA) have been introduced in \cite{forester11} and
+they are an extension of finite automata or, more precisely, extension of finite tree automata (TA).
+They are used as an abstract domain in a verification procedure which performs symbolic execution of the analyzed program is performed.
 A~prototype of this verification procedure has been implemented in a tool called \emph{Forester} \cite{www:forester}.
 Forester verifies programs written in C~language and it detects safety violations like invalid dereferences, invalid frees,
 memory leaks and also reachability of an error program location.
-It is yet able to verify non-trivial data structures like skip-lists of the~second and the~third level
-but there is still a room for its improvement.
+It is able to verify non-trivial data structures like skip-lists of the~second and the~third level.
+However, the current implementation is far from perfect.
 E.g., Forester currently does not support the complete C language syntax and %TODO
 it is not also yet possible to check whether a found error is real or spurious.
 It is also needed to refactor some parts of Forester code before any extension of the tool.
 A~general goal of this work is to improve Forester in the areas described further.
 
-Since FA are highly related to the finite tree automata the first goal of this work is to change
+Since FA are highly related to the finite tree automata, the first goal of this work is to change
 the underlying implementation of finite tree automata in Forester to \vata\ -- a state-of-the-art library for TA manipulation \cite{libvata}.
 Particularly, this consists creating an interface between Forester and VATA to employ VATA as a TA library for Forester backend
 which should bring better maintainability and modularity than having a special TA library implementation within Forester as it is now.
@@ -184,18 +181,18 @@ which enables checking spuriousness of an error found in a program.
 The error could be spurious because too strong abstraction over FA is used.
 The information gained by backward run could be used for the refinement of \emph{predicate abstraction} (one kind of abstraction over FA)
 to prevent verification procedure from getting the same spurious error again.
-This way of gradual refinement is based on \emph{counterexample-guided abstraction refinement} (CEGAR) \cite{cegar}.
+This gradual refinement is known as \emph{counterexample-guided abstraction refinement} (CEGAR) \cite{cegar}.
 However, Forester does not currently use the mentioned predicate abstraction but \emph{height abstraction} %TODO
 because predicate abstraction needs backward run to be fully functional.
-Height abstraction is less precise and less flexible compared to predicate abstraction so implementing predicate abstraction
-enables analysis of even more complex data structures like red-black trees.
+Height abstraction is less precise and less flexible compared to predicate abstraction.
+Implementing predicate abstraction enables analysis of even more complex data structures like red-black trees.
 A~part of the second goal is an implementation of predicate abstraction using backward run in Forester.
 
 This paper is structured as follows.
 In Section \ref{sec:overview}, a high level overview of shape analysis based on forest automata
 is given.
-Then the closer description of backward run and predicate abstraction takes a place in Section \ref{sec:br}
-immediately after the overview section to continue in the verification technique description.
+Then the closer description of backward run and predicate abstraction takes place in Section \ref{sec:br}
+immediately.
 Section \ref{sec:forvata} provides description of modification of Forester to use the VATA library as a backend.
 Finally, conclusions of the work is given in Section \ref{sec:concl}.
 
