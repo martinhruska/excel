@@ -191,8 +191,7 @@ A~part of the second goal is an implementation of predicate abstraction using ba
 This paper is structured as follows.
 In Section \ref{sec:overview}, a high level overview of shape analysis based on forest automata
 is given.
-Then the closer description of backward run and predicate abstraction takes place in Section \ref{sec:br}
-immediately.
+After the overview section we continue with description of backward run and predicate abstraction takes place in Section \ref{sec:br}.
 Section \ref{sec:forvata} provides description of modification of Forester to use the VATA library as a backend.
 Finally, conclusions of the work is given in Section \ref{sec:concl}.
 
@@ -428,7 +427,7 @@ because it does not currently support all the C language constructions.
 It causes that the number of the found errors, spurious or real, is not as high as it would be when
 Forester could analyze all the programs in the benchmark.
 
-\begin{table}[bu]
+\begin{table}[buH!]
 	\vskip6pt
 	\caption{SV-COMP Benchmark Evaluation of Backward Run.%Table shows the number of errors confirmed
 	%to be real and the number of errors determined as spurious by backward run.
@@ -453,9 +452,10 @@ Forester could analyze all the programs in the benchmark.
 This section describes the extension of the Forester tool to enable employing \vata\ 
 efficient implementation of	tree automata and the operations over them,
 especially checking inclusion of languages of tree automata.
-Forester had its own implementation of tree automata and their operations (in module called TA),
-however not as efficient as VATA and it is also less maintainable
-then using a standalone library that implements the state-of-the-art algorithms.
+Forester had its own implementation of tree automata and
+their operations (in module called TA), however not as efficient as VATA.
+It is also less maintainable then using a standalone library
+that implements the state-of-the-art algorithms.
 
 VATA provides two encodings of tree automata -- explicit and semi-symbolic.
 They differ mainly in the way of representation of transition relation of tree automata.
@@ -485,7 +485,7 @@ It is used for example when one needs to iterate over all transitions of tree au
 have the same state as parent and performs a operation with the transitions.
 This last change employs principles of generic programming where
 
-It is possible to apply the design pattern \emph{adapter} \cite{gamma95} to create
+It is possible to apply the design pattern \emph{adapter}~\cite{gamma95} to create
 an interface between Forester and \vata\ after refactoring.
 This makes possible to include VATA without need of rewriting
 Forester to the~names of methods and data members used in VATA.
